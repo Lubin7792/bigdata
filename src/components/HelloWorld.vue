@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <!-- <iframe id="myframe1"  width="1280" height="1080" frameborder="0" scrolling="auto" style="position:absolute;top:0;left: 0px;"></iframe>
-   <iframe id="myframe2"  width="1280" height="1080" frameborder="0" scrolling="auto"style="position:absolute;top:0;left:4480px;"></iframe> -->
+    <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
+   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe>
     <div class="skorke">
       <canvas class="can" ref="canvas" id="skorke01" width="3200" height="1080">
         第一条线
@@ -15,6 +15,11 @@
             :key="index"
             >{{ stackName(index).capacity }}</span
           >
+          <img src="../assets/silo.png" 
+            v-for="(key, index) in positionData.silo"
+            :style="{ left: key.x + 50 +'px', top: key.y - 15 + 'px' }"
+
+          alt="">
         </div>
         <div class="stacker" v-if="beltData">
           <span
@@ -22,6 +27,12 @@
             v-for="(key, index) in positionData.stacker"
             :key="index"
           ></span>
+        </div>
+        <div class="dumper">
+          <img src="../assets/dumper.png" 
+          v-for="(key, index) in positionData.dumper"
+            :style="{ left: key.x + 50 +'px', top: key.y - 25 + 'px' }"
+          alt="">
         </div>
       </div>
       <div class="ship" v-if="shipData">
@@ -43,6 +54,7 @@
           alt=""
         />
       </div>
+
     </div>
   </div>
 </template>
@@ -67,8 +79,7 @@ export default {
       //本地定位数据
       positionData: positionData,
       // 装船机位置
-      berthPosition: {},
-      berthNumber: true
+      berthPosition: {}
     };
   },
   created() {},
@@ -84,36 +95,33 @@ export default {
         style = { left: x + "px", top: y + "px" };
         return style;
       }
-   
       for (let key in this.beltData) {
-
         if (name == this.beltData[key].device_belt_name_simplify) {
           // 泊位号
           berth = this.beltData[key].berth_pile_no;
-            if(this.berthPosition[berth]){
-            this.berthPosition[berth]=this.berthPosition[berth] + 1;
-          }else{
-            this.berthPosition[berth]=1;
+          if (this.berthPosition[berth]) {
+            this.berthPosition[berth] = this.berthPosition[berth] + 1;
+          } else {
+            this.berthPosition[berth] = 1;
           }
-          let num =this.berthPosition[berth]-1;
-          console.log(name,berth,"___",this.berthPosition)
-            x = positionData.ship[berth].xx + widths*num;
-            y = positionData.ship[berth].yy;
-            style = { left: x + "px", top: y + "px" };
+          let num = this.berthPosition[berth] - 1;
+          x = positionData.ship[berth].xx + widths * num;
+          y = positionData.ship[berth].yy;
+          style = { left: x + "px", top: y + "px" };
 
-
-       if(berth == 404){
-         for (let vv in this.berthPosition){
-           this.berthPosition[vv]=0;
-         } 
-
-         return style;
-       }
+          //装船机个数
+          let nums = 0;
+          for (let key in this.berthPosition) {
+            nums = nums + this.berthPosition[key];
+            if (nums == 10) {
+              for (let vv in this.berthPosition) {
+                this.berthPosition[vv] = 0;
+              }
+            }
+          }
           return style;
-
         }
       }
-      
     },
     //垛位信息
     shipShow(name) {
@@ -288,7 +296,7 @@ export default {
         this.getBelt();
         this.getStack();
         this.getShip();
-      }, 1000 * 6000);
+      }, 1000 * 60);
     },
     getBelt() {
       this.axios
@@ -328,26 +336,26 @@ export default {
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-    //  jq.ajax({
-    //     //移动端登录需要带__device__=iPhone&terminal=H5
-    //     url: 'http://10.60.127.130/hhgbi/login/cross/domain',
-    //     data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
-    //     timeout: 5000,
-    //     dataType: 'jsonp',
-    //     jsonp:"callback",
-    //     success: function (res) {
-    //         // alert('登录成功');
-    //         var token = res.accessToken;
-    //         // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-    //         // 原则上登录成功后不用再带token参数，当前有bug正在修复
-    //         document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-    //         document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+     jq.ajax({
+        //移动端登录需要带__device__=iPhone&terminal=H5
+        url: 'http://10.60.127.130/hhgbi/login/cross/domain',
+        data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
+        timeout: 5000,
+        dataType: 'jsonp',
+        jsonp:"callback",
+        success: function (res) {
+            // alert('登录成功');
+            var token = res.accessToken;
+            // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+            // 原则上登录成功后不用再带token参数，当前有bug正在修复
+            document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+            document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
 
-    //     },
-    //     error: function () {
-    //         alert('登录失败');
-    //     }
-    // });
+        },
+        error: function () {
+            alert('登录失败');
+        }
+    });
 
     setTimeout(() => {
       this.refreshData();
@@ -361,11 +369,7 @@ export default {
   watch: {
     beltData: function(data) {
       this.init(data);
-    },
-    berthNumber:function(data){
-      // this.berthNumber={};
     }
-
   }
 };
 </script>
@@ -408,6 +412,7 @@ iframe {
   position: relative;
   top: 0;
   left: 77px;
+  /* z-index: 1; */
 }
 .stack {
   position: absolute;
@@ -420,32 +425,38 @@ iframe {
   height: 40px;
   opacity: 0.8;
 }
+.stack .coalpile img {
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  opacity: 0.8;
+}
 .stack .coalpile .bigRed {
-  background: url("../assets/bigRed.png") top center no-repeat;
+  background: url("../assets/bigRed.png") bottom center no-repeat;
   background-size: 40px;
 }
 .stack .coalpile .smallRed {
-  background: url("../assets/smallRed.png") top center no-repeat;
+  background: url("../assets/smallRed.png") bottom center no-repeat;
   background-size: 30px;
 }
 .stack .coalpile .maxRed {
-  background: url("../assets/maxRed.png") top center no-repeat;
+  background: url("../assets/maxRed.png") bottom center no-repeat;
   background-size: 50px;
 }
 .stack .coalpile .big {
-  background: url("../assets/big.png") top center no-repeat;
+  background: url("../assets/big.png") bottom center no-repeat;
   background-size: 40px;
 }
 .stack .coalpile .small {
-  background: url("../assets/small.png") top center no-repeat;
+  background: url("../assets/small.png") bottom center no-repeat;
   background-size: 30px;
 }
 .stack .coalpile .max {
-  background: url("../assets/max.png") top center no-repeat;
+  background: url("../assets/max.png") bottom center no-repeat;
   background-size: 50px;
 }
 .stack .coalpile .null {
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
 }
 .stack .stacker span {
   width: 60px;
@@ -464,6 +475,7 @@ iframe {
   transform: rotate(29deg);
   position: absolute;
   display: none;
+
 }
 .ship .transfrom {
   transform: rotate(75deg);
@@ -479,5 +491,15 @@ iframe {
 .shiploader img {
   position: absolute;
   width: 40px;
+  
+}
+.stack .dumper img{
+  width: 120px;
+  position: absolute;
+}
+html{
+  background-color: #092039;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 </style>
