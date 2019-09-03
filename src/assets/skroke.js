@@ -3,49 +3,98 @@ export default {
         BF9: {
             ex: 1890,
             ey: 55,
-            bx: 2890,
+            bx: 2885,
             by: 55,
             sts: 'kx'
         },
+         ADDBF9: {
+             ex: 2910,
+             ey: 80,
+             bx: 2885,
+             by: 55,
+             sts: 'kx'
+         },
         BF8: {
             ex: 1898,
             ey: 63,
-            bx: 2830,
+            bx: 2840,
+            by: 63,
+            sts: 'kx'
+        },
+        ADDBF8: {
+            ex: 2865,
+            ey: 88,
+            bx: 2840,
             by: 63,
             sts: 'kx'
         },
         BF7: {
             ex: 1922,
             ey: 71,
-            bx: 2770,
+            bx: 2795,
+            by: 71,
+            sts: 'kx'
+        },
+        ADDBF7: {
+            ex: 2815,
+            ey: 91,
+            bx: 2795,
             by: 71,
             sts: 'kx'
         },
         BF6: {
             ex: 1962,
             ey: 79,
-            bx: 2630,
+            bx: 2615,
+            by: 79,
+            sts: 'kx'
+        },
+        ADDBF6: {
+            ex: 2645,
+            ey: 109,
+            bx: 2615,
             by: 79,
             sts: 'kx'
         },
         BF5: {
             ex: 2002,
             ey: 87,
-            bx: 2570,
+            bx: 2575,
+            by: 87,
+            sts: 'kx'
+        },
+        ADDBF5: {
+            ex: 2595,
+            ey: 107,
+            bx: 2575,
             by: 87,
             sts: 'kx'
         },
         BF4: {
             ex: 1994,
             ey: 95,
-            bx: 2510,
+            bx: 2530,
+            by: 95,
+            sts: 'kx'
+        },
+        ADDBF4: {
+            ex: 2545,
+            ey: 110,
+            bx: 2530,
             by: 95,
             sts: 'kx'
         },
         BF1: {
-            ex: 2034,
+            ex: 2033,
             ey: 103,
-            bx: 2370,
+            bx: 2350,
+            by: 103,
+            sts: 'kx'
+        },
+        ADDBF1: {
+            ex: 2385,
+            ey: 135,
+            bx: 2350,
             by: 103,
             sts: 'kx'
         },
@@ -56,10 +105,24 @@ export default {
             by: 111,
             sts: 'kx'
         },
+        ADDBF2: {
+            ex: 2335,
+            ey: 136,
+            bx: 2310,
+            by: 111,
+            sts: 'kx'
+        },
         BF3: {
             ex: 2066,
             ey: 119,
-            bx: 2250,
+            bx: 2265,
+            by: 119,
+            sts: 'kx'
+        },
+        ADDBF3: {
+            ex: 2285,
+            ey: 139,
+            bx: 2265,
             by: 119,
             sts: 'kx'
         },
@@ -689,10 +752,17 @@ export default {
         BF10: {
             ex: 2633,
             ey: 690,
-            bx: 2433,
-            by: 490,
+            bx: 2430,
+            by: 495,
             sts: 'kx'
         },
+         ADDBF10: {
+             ex: 2645,
+             ey: 495,
+             bx: 2430,
+             by: 495,
+             sts: 'kx'
+         },
         BF11: {
             ex: 2649,
             ey: 690,
@@ -700,20 +770,41 @@ export default {
             by: 520,
             sts: 'kx'
         },
+        ADDBF11: {
+            ex: 2699,
+            ey: 520,
+            bx: 2479,
+            by: 520,
+            sts: 'kx'
+        },
         BF12: {
             ex: 2665,
             ey: 690,
-            bx: 2525,
-            by: 550,
+            bx: 2515,
+            by: 540,
+            sts: 'kx'
+        },
+        ADDBF12: {
+            ex: 2720,
+            ey: 540,
+            bx: 2515,
+            by: 540,
             sts: 'kx'
         },
         BF13: {
             ex: 2689,
             ey: 698,
-            bx: 2571,
-            by: 580,
+            bx: 2551,
+            by: 560,
             sts: 'kx'
         },
+         ADDBF13: {
+             ex: 2751,
+             ey: 560,
+             bx: 2551,
+             by: 560,
+             sts: 'kx'
+         },
         B5T43: {
             ex: 1380,
             ey: 912,
@@ -1841,8 +1932,8 @@ export default {
     },
     ship: {
         "100": {
-            "x": 470,
-            "y": 120,
+            "x": 475,
+            "y": 100,
             transfrom: true
         },
         "101": {
@@ -1864,8 +1955,8 @@ export default {
             yy: 280
         },
         "200": {
-            "x": 870,
-            "y": 520,
+            "x": 865,
+            "y": 490,
             transfrom: true
         },
         "201": {
@@ -1907,12 +1998,12 @@ export default {
         "304": {
             "x": 250,
             "y": 655,
-            xx: 380,
+            xx: 340,
             yy: 775
         },
         "400": {
             "x": 1235,
-            "y": 885,
+            "y": 860,
             transfrom: true
         },
         "401": {
@@ -1936,7 +2027,7 @@ export default {
         "404": {
             "x": 380,
             "y": 785,
-            xx: 380,
+            xx: 340,
             yy: 775
         },
     },
@@ -2048,20 +2139,25 @@ export default {
     },
     shiploader: {
         "SLK": {
-            "x": 610,
-            "y": 180
+            "x": 600,
+            "y": 180,
+            transfrom: true
+
         },
         "SL1": {
             "x": 450,
-            "y": 280
+            "y": 280,
+            "one":true
         },
         "SL2": {
             "x": 250,
-            "y": 280
+            "y": 280,
+            "one": true
         },
         "SL3": {
             "x": 80,
-            "y": 280
+            "y": 280,
+            "one": true
         },
         "SL4": {
             "x": 680,
@@ -2076,82 +2172,93 @@ export default {
             "y": 360
         },
         "SL7": {
-            "x": 980,
-            "y": 550
+            "x": 970,
+            "y": 550,
+            transfrom: true
         },
-        "SL8": {
-            "x": 1100,
-            "y": 785
+       
+        "SL11": {
+            "x": 380,
+            "y": 775
+        },
+        "SL10": {
+            "x": 620,
+            "y": 775    
         },
         "SL9": {
             "x": 860,
             "y": 775
         },
-        "SL10": {
-            "x": 620,
-            "y": 775
-        },
-        "SL11": {
-            "x": 380,
-            "y": 775
-        },
+         "SL8": {
+             "x": 1100,
+             "y": 785
+         },
         "SL12": {
-            "x": 1350,
-            "y": 920
+            "x": 1340,
+            "y": 920,
+            transfrom: true
         }
     },
     dumper: {
         CD1: {
-            x: 2180,
-            y: 130
+            x: 2170,
+            y: 140
         },
         CD2: {
             x: 2220,
-            y: 150
+            y: 140
         },
         CD3: {
-            x: 2260,
-            y: 170
+            x: 2270,
+            y: 140
         },
         CD6: {
-            x: 2440,
-            y: 100
+            x: 2430,
+            y: 110
         },
         CD5: {
             x: 2480,
-            y: 120
+            y: 110
         },
         CD4: {
-            x: 2520,
-            y: 140
+            x: 2530,
+            y: 110
         },
         CD9: {
-            x: 2710,
-            y: 80
+            x: 2700,
+            y: 90
         },
          CD8: {
              x: 2750,
-             y: 100
+             y: 90
          },
          CD7: {
-             x: 2790,
-             y: 120
+             x: 2800,
+             y: 90
          },
          CD13: {
              x: 2560,
-             y: 490
+             y: 490,
+            transfrom: true
+
          },
          CD12: {
              x: 2590,
-             y: 510
+             y: 510,
+            transfrom: true
+
          },
           CD11: {
               x: 2620,
-              y: 530
+              y: 530,
+            transfrom: true
+
           },
         CD10: {
             x: 2650,
-            y: 550
+            y: 550,
+            transfrom: true
+
         },
        
         
