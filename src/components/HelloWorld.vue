@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
-   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe> -->
+    <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
+   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe>
     <div class="skorke">
       <canvas class="can" ref="canvas" id="skorke01" width="3200" height="1080">
         第一条线
@@ -13,27 +13,40 @@
             :style="{ left: key.x + 'px', top: key.y - 15 + 'px' }"
             :class="stackStatus(index)"
             :key="index"
-            ></span
-          >
-          <img src="../assets/silo.png" 
+          ></span>
+          <img
+            src="../assets/silo.png"
             v-for="(key, index) in positionData.silo"
-            :style="{ left: key.x + 50 +'px', top: key.y - 15 + 'px' }"
-          alt="">
+            :style="{ left: key.x + 50 + 'px', top: key.y - 15 + 'px' }"
+            :key="index"
+            alt=""
+          />
         </div>
         <div class="stacker" v-if="beltData">
           <span
             :style="stackerPosition(index)"
             v-for="(key, index) in positionData.stacker"
             :key="index"
-          :class="{stackerS:stackerClass(index)}"
+            :class="{ stackerS: stackerClass(index) }"
           ></span>
         </div>
+        <div class="slio">
+          <span
+            v-for="(key, index) in positionData.silolader"
+            :style="slioloaderPosition(key)"
+            :key="index"
+          >
+          </span>
+        </div>
         <div class="dumper">
-          <span src="../assets/dumper.png" 
-          v-for="(key, index) in positionData.dumper"
-            :style="{ left: key.x + 50 +'px', top: key.y - 25 + 'px' }"
-          :class="{ transfrom: key.transfrom}"
-          alt=""></span>
+          <span
+            src="../assets/dumper.png"
+            v-for="(key, index) in positionData.dumper"
+            :style="{ left: key.x + 50 + 'px', top: key.y - 25 + 'px' }"
+            :key="index"
+            :class="{ transfrom: key.transfrom }"
+            alt=""
+          ></span>
         </div>
       </div>
       <div class="ship" v-if="shipData">
@@ -50,11 +63,14 @@
           v-for="(position, index) in positionData.shiploader"
           :key="index"
           :style="shiploaderPosition(index)"
-          :class="{ transfrom: position.transfrom,one:position.one,ones:shipOne(index)}"
+          :class="{
+            transfrom: position.transfrom,
+            one: position.one,
+            ones: shipOne(index)
+          }"
           alt=""
         ></span>
       </div>
-
     </div>
   </div>
 </template>
@@ -85,19 +101,39 @@ export default {
   created() {},
   computed: {},
   methods: {
-    // 装船机方向
-    shipOne(name){
-      let berth,state=0;
-     for (let key in this.beltData){
-       if(name == this.beltData[key].device_belt_name_simplify){
-         //泊位号
-         berth = this.beltData[key].berth_pile_no;
-        if(300<berth&&berth<400){
-          state =1;
+    slioloaderPosition(name) {
+      let x, y, style;
+      for (let key in this.beltData) {
+        if (this.beltData[key].device_belt_name_simplify == name) {
+          // 筒仓名称
+          let status = this.beltData[key].berth_pile_no;
+
+          for (let index in positionData.silo) {
+            if (index == status) {
+              y = positionData.silo[index].y - 30;
+              x = positionData.silo[index].x+30;
+            }
+          }
         }
-       }
-     }
-     return state==1?true:false;
+      }
+      style = { left: x + "px", top: y + "px" };
+
+      return style;
+    },
+    // 装船机方向
+    shipOne(name) {
+      let berth,
+        state = 0;
+      for (let key in this.beltData) {
+        if (name == this.beltData[key].device_belt_name_simplify) {
+          //泊位号
+          berth = this.beltData[key].berth_pile_no;
+          if (300 < berth && berth < 400) {
+            state = 1;
+          }
+        }
+      }
+      return state == 1 ? true : false;
     },
     // 装船机位置
     shiploaderPosition(name) {
@@ -120,22 +156,22 @@ export default {
           }
           let berthPlural = 0;
           // 判断对应的泊位
-          if(300<berth&&berth<400){
-            let plural = Number(berth)+100;
-            if(this.berthPosition[plural]){
-               berthPlural = this.berthPosition[plural];
+          if (300 < berth && berth < 400) {
+            let plural = Number(berth) + 100;
+            if (this.berthPosition[plural]) {
+              berthPlural = this.berthPosition[plural];
             }
           }
-           if(400<berth&&berth<500){
-            let plural = Number(berth)-100;
-            if(this.berthPosition[plural]){
-               berthPlural = this.berthPosition[plural];
+          if (400 < berth && berth < 500) {
+            let plural = Number(berth) - 100;
+            if (this.berthPosition[plural]) {
+              berthPlural = this.berthPosition[plural];
             }
           }
-          let num = this.berthPosition[berth]+berthPlural - 1 ;
+          let num = this.berthPosition[berth] + berthPlural - 1;
           x = positionData.ship[berth].xx + widths * num;
           y = positionData.ship[berth].yy;
-          style = { left: x + "px", top: y -20+ "px" };
+          style = { left: x + "px", top: y - 20 + "px" };
 
           //装船机个数
           let nums = 0;
@@ -162,12 +198,13 @@ export default {
       return show == 1 ? true : false;
     },
     // 堆取料机
-    stackerClass(name){
-      if((name.substring(0,1)=="S")&&(name.substring(1,2)!="R")){
-       return true
+    stackerClass(name) {
+      if (name.substring(0, 1) == "S" && name.substring(1, 2) != "R") {
+        return true;
       }
     },
     stackerPosition(name) {
+      // console.log(name,"name")
       let x, y, style;
       for (let key in this.beltData) {
         if (this.beltData[key].device_belt_name_simplify == name) {
@@ -175,22 +212,43 @@ export default {
           // 发生故障用默认值
           if (status == "zw") {
             x = positionData.stacker[name].x - 20;
-            y = positionData.stacker[name].y - 35;
+            y = positionData.stacker[name].y - 7;
             style = { left: x + "px", top: y + "px" };
             return style;
           }
           for (let index in positionData.stack) {
             if (index == status) {
-              x = positionData.stack[index].x + 70;
-              y = positionData.stack[index].y ;
+              let state = this.downUp(index, name);
+              if (name == "R1" || name == "R2") {
+                y = positionData.stack[index].y - 18 + state * 25;
+              } else {
+                y = positionData.stack[index].y - 22 + state * 22;
+              }
+              x = positionData.stack[index].x + 60;
             }
           }
         }
       }
       style = { left: x + "px", top: y + "px" };
-      
-     
+
       return style;
+    },
+    downUp(index, name) {
+      let plusOr = 0;
+      for (let key in positionData.dev_pile) {
+        if (name == key) {
+          let up = positionData.dev_pile[key].u;
+          let down = positionData.dev_pile[key].d;
+          if (index.substring(0, up.length) == up && up.length != 0) {
+            plusOr = 1;
+          }
+
+          if (index.substring(0, down.length) == down && down.length != 0) {
+            plusOr = -1;
+          }
+        }
+      }
+      return plusOr;
     },
     stackStatus(name) {
       let status = {};
@@ -202,7 +260,7 @@ export default {
       });
       // 堆场信息核对
       // console.log(status.capacity, status.temperature, name);
-    // 堆场大小温度状态
+      // 堆场大小温度状态
       if (
         0 < status.capacity &&
         status.capacity < 6000 &&
@@ -305,8 +363,8 @@ export default {
         name == "BQ3T" ? (name = "BD3") : "";
         name == "SRS" ? (name = "SF") : "";
         // ADD线
-        if(name.indexOf("ADD")!=-1){
-          name=name.substring(3);
+        if (name.indexOf("ADD") != -1) {
+          name = name.substring(3);
         }
         datas.map(item => {
           if (name == item.device_belt_name_simplify) {
@@ -376,26 +434,26 @@ export default {
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-    //  jq.ajax({
-    //     //移动端登录需要带__device__=iPhone&terminal=H5
-    //     url: 'http://10.60.127.130/hhgbi/login/cross/domain',
-    //     data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
-    //     timeout: 5000,
-    //     dataType: 'jsonp',
-    //     jsonp:"callback",
-    //     success: function (res) {
-    //         // alert('登录成功');
-    //         var token = res.accessToken;
-    //         // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-    //         // 原则上登录成功后不用再带token参数，当前有bug正在修复
-    //         document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-    //         document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+     jq.ajax({
+        //移动端登录需要带__device__=iPhone&terminal=H5
+        url: 'http://10.60.127.130/hhgbi/login/cross/domain',
+        data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
+        timeout: 5000,
+        dataType: 'jsonp',
+        jsonp:"callback",
+        success: function (res) {
+            // alert('登录成功');
+            var token = res.accessToken;
+            // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+            // 原则上登录成功后不用再带token参数，当前有bug正在修复
+            document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+            document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
 
-    //     },
-    //     error: function () {
-    //         alert('登录失败');
-    //     }
-    // });
+        },
+        error: function () {
+            alert('登录失败');
+        }
+    });
 
     setTimeout(() => {
       this.refreshData();
@@ -504,10 +562,10 @@ iframe {
   background: url("../assets/reclaimer.png") top center no-repeat;
   background-size: 60px;
   position: absolute;
+  /* transform: rotateY(180deg) */
 }
-.stack .stacker .stackerS{
-  background-image: url("../assets/stacker.png") ;
-
+.stack .stacker .stackerS {
+  background-image: url("../assets/stacker.png");
 }
 .ship {
   position: absolute;
@@ -520,14 +578,12 @@ iframe {
   border: 0;
   position: absolute;
   display: none;
-  background:url("../assets/ship.png") top center no-repeat;
+  background: url("../assets/ship.png") top center no-repeat;
   background-size: 180px;
-
-
 }
 
 .ship .transfrom {
-  background:url("../assets/shipTansfrom.png")top center no-repeat;
+  background: url("../assets/shipTansfrom.png") top center no-repeat;
   background-size: 120px;
 }
 .ship .show {
@@ -542,40 +598,46 @@ iframe {
   position: absolute;
   width: 50px;
   height: 50px;
-  background:url("../assets/shiploader.png")bottom center no-repeat;
-background-size: 50px;
-  
+  background: url("../assets/shiploader.png") bottom center no-repeat;
+  background-size: 50px;
 }
-.shiploader .transfrom{
-   width: 50px;
+.shiploader .transfrom {
+  width: 50px;
   height: 50px;
-background-image: url("../assets/shiploadertwo.png")
+  background-image: url("../assets/shiploadertwo.png");
 }
-.shiploader .one{
-   width: 50px;
+.shiploader .one {
+  width: 50px;
   height: 50px;
-background-image: url("../assets/shiploaderone.png")
+  background-image: url("../assets/shiploaderone.png");
 }
-.shiploader .ones{
-   width: 50px;
+.shiploader .ones {
+  width: 50px;
   height: 50px;
-background-image: url("../assets/shiploaderone.png")
+  background-image: url("../assets/shiploaderone.png");
 }
-.stack .dumper span{
+.stack .dumper span {
   width: 120px;
   height: 100px;
-  background:url("../assets/dumperTansfrom.png")top center no-repeat;
+  background: url("../assets/dumperTansfrom.png") top center no-repeat;
   position: absolute;
   background-size: 80px;
 }
-.stack .dumper .transfrom{
-  background:url("../assets/dumper.png")top center no-repeat;
+.stack .dumper .transfrom {
+  background: url("../assets/dumper.png") top center no-repeat;
 
   background-size: 120px;
 }
-html{
+.slio span {
+  width: 50px;
+  height: 50px;
+  background: url("../assets/siloloader.png") top center no-repeat;
+  position: absolute;
+  background-size: 45px;
+}
+html {
   background-color: #092039;
-  /* overflow-y: hidden; */
- /* overflow-x: hidden; */
+  overflow-y: hidden; 
+ overflow-x: hidden;
 }
 </style>
