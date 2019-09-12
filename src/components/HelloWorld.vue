@@ -1,7 +1,43 @@
 <template>
   <div class="hello">
-    <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
-   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe>
+    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
+   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe> -->
+    <div class="timeaxis" @mouseenter="on_top_enter" @mouseleave="on_top_leave"  v-if="historyData">
+      <div class="timegauge">
+        <canvas class="timeCan" ref="canvas" id="skorke01" width="1280" height="1080">
+          标尺
+      </canvas>
+      </div>
+      <div class="timecenter">
+        <swiper
+        :options="swiperOption"
+        class="swiper-wrap"
+        ref="mySwiper"
+       
+      >
+        <swiper-slide v-for="(item, index) in historyData" :key="index">
+          <!-- {{ index }} -->
+          <div v-for="(device, indexO) in item" class="type" >
+            <span class="title">{{titleName(indexO)}}:</span>
+            <div class="timeBox">
+              <div class="transverse">
+              <span  v-for="(unit, indexT) in device" :style="timeStyle(unit)">
+                <!-- {{ unit }} -->
+              </span>
+            </div>
+            </div>
+          </div>
+        </swiper-slide>
+        <!-- 常见的小圆点 -->
+        <div
+          class="swiper-pagination"
+          v-for="(item, index) in positionData.number"
+          :key="index"
+          slot="pagination"
+        ></div>
+      </swiper>
+      </div>
+    </div>
     <div class="skorke">
       <canvas class="can" ref="canvas" id="skorke01" width="3200" height="1080">
         第一条线
@@ -10,8 +46,9 @@
         <div class="coalpile">
           <span
             v-for="(key, index) in positionData.stack"
-            :style="{ left: key.x + 'px', top: key.y - 15 + 'px' }"
+            :style="{ left: key.x + 'px', top: key.y - 20 + 'px' }"
             :class="stackStatus(index)"
+            @click="stackNames(index)"
             :key="index"
           ></span>
           <img
@@ -27,7 +64,8 @@
             :style="stackerPosition(index)"
             v-for="(key, index) in positionData.stacker"
             :key="index"
-            :class="{ stackerS: stackerClass(index) }"
+            :class="stackerClass(index)"
+            @click="stackNames(index)"
           ></span>
         </div>
         <div class="slio">
@@ -76,6 +114,8 @@
 </template>
 
 <script>
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { clearInterval } from "timers";
 import positionData from "../assets/skroke.js";
 import jq from "jquery";
@@ -85,6 +125,7 @@ export default {
     msg: String
   },
   data() {
+    const that = this;
     return {
       //皮带装船机等数据
       beltData: null,
@@ -92,15 +133,192 @@ export default {
       stackData: null,
       //泊位信息
       shipData: null,
+      // 时间轴
+      historyData:null,
       //本地定位数据
       positionData: positionData,
       // 装船机位置
-      berthPosition: {}
+      berthPosition: {},
+      imgIndex: 1,
+      swiperOption: {
+        //是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
+        notNextTick: true,
+        //循环
+        loop: true,
+        //设定初始化时slide的索引
+        initialSlide: 0,
+        //自动播放
+        autoplay: {
+          delay: 50000000,
+          stopOnLastSlide: false,
+          /* 触摸滑动后是否继续轮播 */
+          disableOnInteraction: true
+        },
+        //滑动速度
+        speed: 800,
+        //滑动方向
+        direction: "horizontal",
+        //小手掌抓取滑动
+        grabCursor: true,
+        on: {
+          //滑动之后回调函数
+          slideChangeTransitionStart: function() {
+            /* realIndex为滚动到当前的slide索引值 */
+            that.imgIndex = this.realIndex - 1;
+          }
+        },
+        //分页器设置
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+          type: "bullets"
+        }
+      }
     };
   },
   created() {},
   computed: {},
+  components: {
+    swiper,
+    swiperSlide
+  },
   methods: {
+    timeInit(data){
+      let nowTime = new Date(data.ship.SL1[0].endtime/1000);
+      let h = nowTime.getHours()
+      let m = nowTime.getMinutes()
+      let array=[];
+      for (let index = h+1; index > 0; index--) {
+        array.unshift(index)
+      }
+      for (let index = 24; index > h-1; index--) {
+        array.unshift(index)
+      }
+      var SK02 = document.getElementById("skorke01");
+      var SK02x = SK02.getContext("2d");
+      SK02x.clearRect(0, 0, 1280, 1080);
+      var skroke = function(context, color, x1, y1, x2, y2) {
+        context.beginPath();
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
+        context.lineWidth = 2;
+        context.strokeStyle = color || "white";
+        context.stroke();
+      };
+      array.map((item,index)=>{
+        //   skroke(
+        //   SK02x,
+        //   stats(key),
+        //   positionData.belt[key].bx,
+        //   positionData.belt[key].by,
+        //   positionData.belt[key].ex,
+        //   positionData.belt[key].ey
+        // );
+      console.log(item,index)
+      })
+
+      console.log(array)
+    },
+    timeStyle(value){
+      let widthPx,color,style;
+      widthPx=((value.endtime-value.startime)/1000000)*(12/864);
+      if(widthPx>1300){
+        widthPx=1300
+      }
+      if(value.status=="yx"){
+        color="#57fef8"
+      }
+      if(value.status=="kx"){
+        color="#2b68ff"
+      }
+      if(value.status=="gz"){
+        color="red"
+      }
+      if(value.status=="tl"){
+        color="#aeaeae"
+      }
+      style={width:widthPx+"px","background-color":color}
+      return style;
+    },
+    titleName(name){
+      if(parseInt(name)){
+        return "CD"+name;
+      }else{
+        return name;
+      }
+    },
+    handle(data, cdData) {
+      let dumper = {},
+        stack = {},
+        take = {},
+        ship = {},
+        history = {},
+        cdhistory = [];
+
+      data.map((value, index) => {
+        var pushData = function(name) {
+          if (name[value.device_name]) {
+            name[value.device_name].unshift(value);
+          } else {
+            name[value.device_name] = [];
+            name[value.device_name].push(value);
+          }
+        };
+        // dumper
+        if (
+          value.device_name.substring(0, 1) == "S" &&
+          value.device_name.length == 2
+        ) {
+          pushData(stack);
+        }
+        if (value.device_name.substring(0, 2) == "CD") {
+          pushData(dumper);
+        }
+        if (
+          value.device_name.substring(0, 1) == "R" ||
+          value.device_name.substring(0, 2) == "SR"
+        ) {
+          pushData(take);
+        }
+        if (value.device_name.substring(0, 2) == "SL") {
+          pushData(ship);
+        }
+      });
+
+      cdData.map((item, index) => {
+        let obj = {
+          device_name: item[0].substring(2),
+          startime: item[1]*1000000,
+          endtime: item[2]*1000000,
+          status: item[3]
+        };
+        cdhistory.push(obj);
+      });
+      cdhistory.map((value, index) => {
+        if (dumper[value.device_name]) {
+          dumper[value.device_name].push(value);
+        } else {
+          dumper[value.device_name] = [];
+          dumper[value.device_name].push(value);
+        }
+      });
+      for (const key in dumper) {
+        dumper[key] = dumper[key].sort((a, b) => b.startime - a.startime);
+      }
+      history.take = take;
+      history.stack = stack;
+      history.dumper = dumper;
+      history.ship = ship;
+      this.historyData=history;
+      this.timeInit(history)
+    },
+    //通过获得的swiper对象来暂停自动播放
+    on_top_enter() {
+      this.$refs.mySwiper.swiper.autoplay.stop();
+    },
+    on_top_leave() {
+      this.$refs.mySwiper.swiper.autoplay.start();
+    },
     slioloaderPosition(name) {
       let x, y, style;
       for (let key in this.beltData) {
@@ -110,8 +328,8 @@ export default {
 
           for (let index in positionData.silo) {
             if (index == status) {
-              y = positionData.silo[index].y - 30;
-              x = positionData.silo[index].x+30;
+              y = positionData.silo[index].y - 43;
+              x = positionData.silo[index].x + 35;
             }
           }
         }
@@ -171,7 +389,7 @@ export default {
           let num = this.berthPosition[berth] + berthPlural - 1;
           x = positionData.ship[berth].xx + widths * num;
           y = positionData.ship[berth].yy;
-          style = { left: x + "px", top: y - 20 + "px" };
+          style = { left: x + "px", top: y - 5 + "px" };
 
           //装船机个数
           let nums = 0;
@@ -199,8 +417,75 @@ export default {
     },
     // 堆取料机
     stackerClass(name) {
+      let stack,
+        status,
+        upDown = 0;
+      for (let key in this.beltData) {
+        if (this.beltData[key].device_belt_name_simplify == name) {
+          stack = this.beltData[key].berth_pile_no;
+          status = this.beltData[key].status;
+        }
+      }
+
+      for (let key in positionData.dev_pile) {
+        if (name == key) {
+          let up = positionData.dev_pile[key].u;
+          let down = positionData.dev_pile[key].d;
+          if (stack.substring(0, up.length) == up && up.length != 0) {
+            upDown = 1;
+          }
+
+          if (stack.substring(0, down.length) == down && down.length != 0) {
+            upDown = -1;
+          }
+        }
+      }
+      if (name.substring(0, 2) == "SR") {
+        if (status == "yx") {
+          if (upDown == 1) {
+            return "takeUp";
+          }
+          if (upDown == -1) {
+            return "takeDown";
+          }
+          return "take";
+        }
+        if (status == "kx" || status == "gz") {
+          return "take";
+        }
+      }
+
       if (name.substring(0, 1) == "S" && name.substring(1, 2) != "R") {
-        return true;
+        if (status == "yx") {
+          if (upDown == 0) {
+            return "stack";
+          }
+          if (upDown == 1) {
+            return "stackUp";
+          }
+          if (upDown == -1) {
+            return "stackDown";
+          }
+        }
+        if (status == "kx" || status == "gz") {
+          return "stack";
+        }
+      }
+      if (name.substring(0, 1) == "R") {
+        if (status == "yx") {
+          if (upDown == 0) {
+            return "take";
+          }
+          if (upDown == 1) {
+            return "takeUp";
+          }
+          if (upDown == -1) {
+            return "takeDown";
+          }
+        }
+        if (status == "kx" || status == "gz") {
+          return "take";
+        }
       }
     },
     stackerPosition(name) {
@@ -220,11 +505,17 @@ export default {
             if (index == status) {
               let state = this.downUp(index, name);
               if (name == "R1" || name == "R2") {
-                y = positionData.stack[index].y - 18 + state * 25;
+                y = positionData.stack[index].y - 30 + state * 25;
               } else {
-                y = positionData.stack[index].y - 22 + state * 22;
+                y = positionData.stack[index].y - 35 + state * 22;
               }
-              x = positionData.stack[index].x + 60;
+
+              // if (name == "R1" || name == "R2") {
+              //   y = positionData.stack[index].y - 63 ;
+              // } else {
+              //   y = positionData.stack[index].y -58;
+              // }
+              x = positionData.stack[index].x + 30 * state;
             }
           }
         }
@@ -250,6 +541,23 @@ export default {
       }
       return plusOr;
     },
+    // downUp(index, name) {
+    //   let plusOr = 0;
+    //   for (let key in positionData.dev_pile) {
+    //     if (name == key) {
+    //       let up = positionData.dev_pile[key].u;
+    //       let down = positionData.dev_pile[key].d;
+    //       if (index.substring(0, up.length) == up && up.length != 0) {
+    //         plusOr = 1;
+    //       }
+
+    //       if (index.substring(0, down.length) == down && down.length != 0) {
+    //         plusOr = -1;
+    //       }
+    //     }
+    //   }
+    //   return plusOr;
+    // },
     stackStatus(name) {
       let status = {};
       this.stackData.rows.map(item => {
@@ -330,7 +638,7 @@ export default {
           color = "#bfbfbf";
         }
         if (status == "yx" || status2 == "yx") {
-          color = "chartreuse";
+          color = "#47d442";
         }
         if (status == "gz" || status2 == "gz") {
           color = "tomato";
@@ -370,7 +678,7 @@ export default {
           if (name == item.device_belt_name_simplify) {
             st =
               item.status == "yx"
-                ? "chartreuse"
+                ? "#47d442"
                 : item.status == "gz"
                 ? "tomato"
                 : "#bfbfbf";
@@ -394,7 +702,9 @@ export default {
         this.getBelt();
         this.getStack();
         this.getShip();
-      }, 1000 * 60);
+    this.getHistory();
+
+      }, 1000 * 6000);
     },
     getBelt() {
       this.axios
@@ -425,35 +735,78 @@ export default {
         .catch(response => {
           console.log(response.data);
         });
+    },
+    getTrain() {
+      this.axios
+        .get("/getTrain")
+        .then(response => {
+          // console.log(response.data.rows);
+        })
+        .catch(response => {
+          console.log(response.data);
+        });
+    },
+    getHistoryCd(datas) {
+      this.axios
+        .get("/getHistoryCd")
+        .then(response => {
+          console.time("aaa");
+          this.handle(datas, response.data.rows);
+        })
+        .catch(response => {
+          console.log(response);
+        });
+    },
+    getHistory() {
+      this.axios
+        .get("/getHistory")
+        .then(response => {
+          // this.handle(response.data);
+          return response.data;
+        })
+        .then(datas => {
+          this.getHistoryCd(datas);
+        })
+        .catch(response => {
+          console.log(response);
+        });
     }
   },
   mounted() {
+    //皮带
     this.getBelt();
+    //堆场
     this.getStack();
+    //船
     this.getShip();
+    //火车
+    this.getTrain();
+    //时间轴历史数据
+    // this.getHistoryCd();
+    this.getHistory();
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-     jq.ajax({
-        //移动端登录需要带__device__=iPhone&terminal=H5
-        url: 'http://10.60.127.130/hhgbi/login/cross/domain',
-        data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
-        timeout: 5000,
-        dataType: 'jsonp',
-        jsonp:"callback",
-        success: function (res) {
-            // alert('登录成功');
-            var token = res.accessToken;
-            // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-            // 原则上登录成功后不用再带token参数，当前有bug正在修复
-            document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-            document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+    //  jq.ajax({
+    //     //移动端登录需要带__device__=iPhone&terminal=H5
+    //     url: 'http://10.60.127.130/hhgbi/login/cross/domain',
+    //     data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
+    //     timeout: 5000,
+    //     dataType: 'jsonp',
+    //     jsonp:"callback",
+    //     success: function (res) {
+    //         // alert('登录成功');
+    //         var token = res.accessToken;
+    //         // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+    //         // 原则上登录成功后不用再带token参数，当前有bug正在修复
+    //         document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+    //         document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
 
-        },
-        error: function () {
-            alert('登录失败');
-        }
-    });
+    //     },
+    //     error: function () {
+    //         alert('登录失败');
+    //     }
+    // });
 
     setTimeout(() => {
       this.refreshData();
@@ -519,9 +872,9 @@ iframe {
 }
 .stack .coalpile span {
   position: absolute;
-  width: 100px;
+  width: 50px;
   height: 50px;
-  opacity: 0.8;
+  /* opacity: 0.8; */
 }
 .stack .coalpile img {
   position: absolute;
@@ -557,15 +910,40 @@ iframe {
   /* background-color: blueviolet; */
 }
 .stack .stacker span {
-  width: 60px;
-  height: 100px;
-  background: url("../assets/reclaimer.png") top center no-repeat;
+  width: 150px;
+  height: 60px;
+  background: url("../assets/take.png") top center no-repeat;
   background-size: 60px;
   position: absolute;
+  display: inline-block;
+  z-index: 6;
   /* transform: rotateY(180deg) */
 }
-.stack .stacker .stackerS {
-  background-image: url("../assets/stacker.png");
+.stack .stacker .stack {
+  background-image: url("../assets/stack.png");
+  background-position: 100% 100%;
+}
+.stack .stacker .stackUp {
+  background-image: url("../assets/stackUp.gif");
+  background-position: 10% 100%;
+}
+.stack .stacker .stackDown {
+  background-image: url("../assets/stackDown.gif");
+  background-position: 1% 100%;
+}
+.stack .stacker .take {
+  height: 65px;
+  background-image: url("../assets/take.png");
+
+  background-position: 100% 100%;
+}
+.stack .stacker .takeUp {
+  background-image: url("../assets/takeUp.gif");
+  background-position: 10% 100%;
+}
+.stack .stacker .takeDown {
+  background-image: url("../assets/takeDown.gif");
+  background-position: 0% 100%;
 }
 .ship {
   position: absolute;
@@ -602,8 +980,10 @@ iframe {
   background-size: 50px;
 }
 .shiploader .transfrom {
-  width: 50px;
+  width: 60px;
   height: 50px;
+  background-size: 60px;
+
   background-image: url("../assets/shiploadertwo.png");
 }
 .shiploader .one {
@@ -629,15 +1009,81 @@ iframe {
   background-size: 120px;
 }
 .slio span {
-  width: 50px;
+  width: 60px;
   height: 50px;
   background: url("../assets/siloloader.png") top center no-repeat;
   position: absolute;
-  background-size: 45px;
+  background-size: 55px;
 }
 html {
   background-color: #092039;
-  overflow-y: hidden; 
- overflow-x: hidden;
+  /* overflow-y: hidden; 
+ overflow-x: hidden; */
+}
+body {
+  position: relative;
+  top: -3px;
+}
+.timeaxis .type {
+  width: 100%;
+  height: 26px;
+}
+.timeaxis .timeBox{
+  width: 1100px;
+  float: right;
+  overflow: hidden;
+  padding-top: 7px;
+
+} 
+.timeaxis .transverse {
+  width: 3000px;
+  float: right;
+  overflow: hidden;
+}
+.timeaxis .title {
+  float: left;
+  color: #FFF;
+  font-size: 12px;
+  line-height: 20px;
+height: 20px;
+
+}
+
+.timeaxis {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 1140px;
+  height: 500px;
+  padding-right: 20px;
+  padding-left: 20px;
+  /* background-color: #aaa; */
+  background-color: #111d3a;
+}
+.timeaxis .timegauge{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.timeaxis .timecenter{
+  width: 1140px;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+.timeaxis .swiper-container {
+  height: 500px;
+}
+.timeaxis .transverse span {
+  float: right;
+  width: 4px;
+  height: 6px;
+  display: inline-block;
+  background-color: antiquewhite;
+
+}
+.timeaxis .swiper-pagination-bullet{
+  width: 12px;
+  height: 12px;
 }
 </style>
