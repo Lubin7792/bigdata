@@ -2142,7 +2142,7 @@ export default {
     shiploader: {
         "SLK": {
             "x": 580,
-            "y": 180,
+            "y": 160,
             transfrom: true
 
         },
@@ -2174,7 +2174,7 @@ export default {
             "y": 360
         },
         "SL7": {
-            "x": 950,
+            "x": 970,
             "y": 550,
             transfrom: true
         },
@@ -2196,7 +2196,7 @@ export default {
             "y": 785
         },
         "SL12": {
-            "x": 1320,
+            "x": 1340,
             "y": 920,
             transfrom: true
         }

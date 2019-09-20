@@ -1,43 +1,32 @@
 <template>
   <div class="hello">
-    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe>
-   <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe> -->
-    <div
-      class="timeaxis"
-      @mouseenter="on_top_enter"
-      @mouseleave="on_top_leave"
-     
-    >
+    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe> -->
+    <!-- <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe> -->
+    <div class="timeaxis" @mouseenter="on_top_enter" @mouseleave="on_top_leave">
       <div class="timegauge">
-        <canvas
-          class="timeCan"
-          ref="canvas"
-          id="skorkess"
-          width="1280"
-          height="1080"
-        >
+        <canvas ref="canvas" id="skorkess" width="1280" height="500">
           标尺
         </canvas>
+        <canvas id="skorkeTime" width="1280" height="50"> </canvas>
       </div>
-      <div class="timecenter">
+      <div class="timecenter" v-if="historyData">
         <swiper :options="swiperOption" class="swiper-wrap" ref="mySwiper">
           <swiper-slide v-for="(item, index) in historyData" :key="index">
-            <!-- {{ index }} -->
-            <div v-for="(device, indexO) in item" class="type">
-              <span class="title">{{ titleName(indexO) }}:</span>
-              <div class="timeBox">
-                <div class="transverse">
-                  <span
-                    v-for="(unit, indexT) in device"
-                    :style="timeStyle(unit)"
-                  >
-                    <!-- {{ unit }} -->
-                  </span>
+            <div class="timebox">
+              <div v-for="(device, indexO) in item" class="type">
+                <span class="title">{{ titleName(indexO) }}:</span>
+                <div class="timeBox" :style="timeBoxStyle(historyData)">
+                  <div class="transverse">
+                    <span
+                      v-for="(unit, indexT) in device"
+                      :style="timeStyle(unit)"
+                    >
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </swiper-slide>
-          <!-- 常见的小圆点 -->
           <div
             class="swiper-pagination"
             v-for="(item, index) in positionData.number"
@@ -48,9 +37,56 @@
       </div>
     </div>
     <div class="skorke">
-      <canvas class="can" ref="canvas" id="skorke01" width="3200" height="1080">
-        第一条线
-      </canvas>
+      <div class="svgvan">
+        <canvas
+          class="can"
+          ref="canvas"
+          id="skorke01"
+          width="3200"
+          height="1080"
+        >
+          第一条线
+        </canvas>
+        <svg
+          class="smile"
+          version="1.1"
+          width="5200"
+          height="1080"
+          baseProfile="full"
+          v-if="svgdatas"
+        >
+          <defs>
+            <radialGradient
+              id="grad1"
+              cx="50%"
+              cy="50%"
+              r="50%"
+              fx="50%"
+              fy="50%"
+            >
+              <stop offset="0%" style="stop-color:rgba(255,0,0,1)" />
+              <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)" />
+            </radialGradient>
+          </defs>
+
+          <circle
+            v-for="(value,index) in this.svgdatas"
+            :cx="0"
+            :cy="0"
+            r="6"
+            fill="url(#grad1)"
+          >
+            <animateMotion
+              :path="svgpath(value)"
+              begin="0s"
+              :dur="svgtime(value)"
+              repeatCount="indefinite"
+              from="1"
+              to="3"
+            />
+          </circle>
+        </svg>
+      </div>
       <div class="stack" v-if="stackData">
         <div class="coalpile">
           <span
@@ -59,7 +95,8 @@
             :class="stackStatus(index)"
             @click="stackNames(index)"
             :key="index"
-          ></span>
+            >{{ index }}</span
+          >
           <img
             src="../assets/silo.png"
             v-for="(key, index) in positionData.silo"
@@ -75,7 +112,8 @@
             :key="index"
             :class="stackerClass(index)"
             @click="stackNames(index)"
-          ></span>
+            >{{ index }}
+          </span>
         </div>
         <div class="slio">
           <span
@@ -103,18 +141,15 @@
           :class="{ transfrom: ship.transfrom, show: shipShow(index) }"
           :key="index"
           alt=""
-        ></span>
+          >{{ shipName(index) }}
+        </span>
       </div>
       <div class="shiploader" v-if="beltData">
         <span
           v-for="(position, index) in positionData.shiploader"
           :key="index"
           :style="shiploaderPosition(index)"
-          :class="{
-            transfrom: position.transfrom,
-            one: position.one,
-            ones: shipOne(index)
-          }"
+          :class="[shipOne(index)]"
           alt=""
         ></span>
       </div>
@@ -146,6 +181,7 @@ export default {
       historyData: null,
       //本地定位数据
       positionData: positionData,
+      svgdatas:[],
       // 装船机位置
       berthPosition: {},
       imgIndex: 1,
@@ -158,10 +194,10 @@ export default {
         initialSlide: 0,
         //自动播放
         autoplay: {
-          delay: 50000000,
+          delay: 3000000,
           stopOnLastSlide: false,
           /* 触摸滑动后是否继续轮播 */
-          disableOnInteraction: true
+          disableOnInteraction: false
         },
         //滑动速度
         speed: 800,
@@ -192,8 +228,33 @@ export default {
     swiperSlide
   },
   methods: {
-    timeInit(data) {
+    svgtime(value){
+      let times
+      // 两点之间的距离
+      // let blength = Math.floor(Math.sqrt(Math.pow(value.bx,2)+Math.pow(value.by,2)));
+      // let elength = Math.floor(Math.sqrt(Math.pow(value.ex,2)+Math.pow(value.ey,2)));
+      // times= Math.ceil(Math.abs((elength-blength)/70))  
+       let dx = Math.abs(value.bx - value.ex);
+       let dy = Math.abs(value.by - value.ey);
+       times = Math.ceil(Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2))/70);
+      times<2?times=2:'';
+      return times;
+    },
+    svgpath(value){
+   
+      // let path = M10*n+","+50 T170,70"
+      let path ="M"+value.bx+","+value.by+" "+ "T"+value.ex+","+value.ey;
+      return path
+    },
+    timeBoxStyle(data) {
+      let nowTime = new Date(data.ship.SL1[0].endtime / 1000);
+      let m = nowTime.getMinutes();
+      let num = (m / 60) * 45.83 + 1100;
 
+      let style = { width: num + "px" };
+      return style;
+    },
+    timeInit(data) {
       let nowTime = new Date(data.ship.SL1[0].endtime / 1000);
       let h = nowTime.getHours();
       let m = nowTime.getMinutes();
@@ -205,39 +266,33 @@ export default {
         array.unshift(index);
       }
       var SKT = document.getElementById("skorkess");
-      console.log(SKT)
       var SKTC = SKT.getContext("2d");
       SKTC.clearRect(0, 0, 1280, 1080);
-      var skrokeb = function(color, x1, y1,x2,y2) {
-        console.log("111")
+      SKTC.lineWidth = 1;
+      // SKTC.globalAlpha=0.1;
+      var skrokeb = function(color, x1, y1, x2, y2) {
         SKTC.moveTo(x1, y1);
-        SKTC.lineTo(x2,y2);
-        SKTC.lineWidth = 2;
-        // SKTC.globalAlpha=0.1;
+        SKTC.lineTo(x2, y2);
         SKTC.strokeStyle = color || "white";
         SKTC.stroke();
       };
-      let x=60,y=20;
-   
+      var SKTime = document.getElementById("skorkeTime");
+      var SKTi = SKTime.getContext("2d");
+      SKTi.clearRect(0, 0, 1280, 1080);
+      let x = 60,
+        y = 20;
       array.map((item, index) => {
-          skrokeb(
-          "#00b4ff",
-          x+(index*46),
-          y,
-          x+(index*46),
-          y+480
-         
-        );
-       
+        skrokeb("#00b4ff", x + index * 45.83, y, x + index * 45.83, y + 460);
+        SKTi.fillStyle = "#FFF";
+        SKTi.font = "16px Arial";
+        SKTi.fillText(item, x + index * 45.83, y);
       });
-
-      console.log(array);
     },
     timeStyle(value) {
       let widthPx, color, style;
-      widthPx = ((value.endtime - value.startime) / 1000000) * (11.5 / 864);
+      widthPx = ((value.endtime - value.startime) / 1000000) * (11 / 864);
       if (widthPx > 1300) {
-        widthPx = 1300;
+        widthPx = 1200;
       }
       if (value.status == "yx") {
         color = "#57fef8";
@@ -352,19 +407,57 @@ export default {
       return style;
     },
     // 装船机方向
+
     shipOne(name) {
       let berth,
+        run,
         state = 0;
       for (let key in this.beltData) {
         if (name == this.beltData[key].device_belt_name_simplify) {
           //泊位号
           berth = this.beltData[key].berth_pile_no;
-          if (300 < berth && berth < 400) {
-            state = 1;
+          run = this.beltData[key].status;
+          if (run == "gz") {
+            state = "gzdown";
+            if (300 < berth && berth < 400) {
+              state = "gup";
+            }
+            if (100 < berth && berth < 200) {
+              state = "gup";
+            }
+            if ("100" == berth || berth == "200" || berth == "400") {
+              state = "gleft";
+            }
+          }
+          if (run == "yx") {
+            state = "yxdown";
+
+            if (300 < berth && berth < 400) {
+              state = "yup";
+            }
+            if (100 < berth && berth < 200) {
+              state = "yup";
+            }
+            if ("100" == berth || berth == "200" || berth == "400") {
+              state = "yleft";
+            }
+          }
+          if (run == "kx") {
+            state = "kxdown";
+
+            if (300 < berth && berth < 400) {
+              state = "up";
+            }
+            if (100 < berth && berth < 200) {
+              state = "up";
+            }
+            if ("100" == berth || berth == "200" || berth == "400") {
+              state = "left";
+            }
           }
         }
       }
-      return state == 1 ? true : false;
+      return state;
     },
     // 装船机位置
     shiploaderPosition(name) {
@@ -419,6 +512,15 @@ export default {
       }
     },
     //垛位信息
+    shipName(name) {
+      let show;
+      this.shipData.map(item => {
+        if (item[0] == name && !!item[1]) {
+          show = item[1];
+        }
+      });
+      return show;
+    },
     shipShow(name) {
       let show;
       this.shipData.map(item => {
@@ -632,6 +734,19 @@ export default {
       return status;
     },
     init(datas) {
+      let svgname,svgdata=[];
+      datas.map(item => {
+          if((item.status=="yx")&&(item.device_belt_name_simplify.slice(0,1)=="B")){
+            svgname = item.device_belt_name_simplify; 
+            for (const key in positionData.belt) {
+              if(key == svgname){
+                svgdata.push(positionData.belt[key])
+              }
+            }
+          }
+           
+          });
+           this.svgdatas= svgdata;
       var SK01 = document.getElementById("skorke01");
       var SK01x = SK01.getContext("2d");
       SK01x.clearRect(0, 0, 3200, 1080);
@@ -716,7 +831,7 @@ export default {
         this.getStack();
         this.getShip();
         this.getHistory();
-      }, 1000 * 6000);
+      }, 1000 * 60);
     },
     getBelt() {
       this.axios
@@ -762,7 +877,6 @@ export default {
       this.axios
         .get("/getHistoryCd")
         .then(response => {
-          console.time("aaa");
           this.handle(datas, response.data.rows);
         })
         .catch(response => {
@@ -785,7 +899,6 @@ export default {
     }
   },
   mounted() {
-
     //皮带
     this.getBelt();
     //堆场
@@ -800,26 +913,29 @@ export default {
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-    //  jq.ajax({
-    //     //移动端登录需要带__device__=iPhone&terminal=H5
-    //     url: 'http://10.60.127.130/hhgbi/login/cross/domain',
-    //     data: {'fine_username': 'bigscreen', 'fine_password': 'bigscreen_2019', 'validity': -1},
-    //     timeout: 5000,
-    //     dataType: 'jsonp',
-    //     jsonp:"callback",
-    //     success: function (res) {
-    //         // alert('登录成功');
-    //         var token = res.accessToken;
-    //         // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-    //         // 原则上登录成功后不用再带token参数，当前有bug正在修复
-    //         document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-    //         document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
-
-    //     },
-    //     error: function () {
-    //         alert('登录失败');
-    //     }
-    // });
+    jq.ajax({
+      //移动端登录需要带__device__=iPhone&terminal=H5
+      url: "http://10.60.127.130/hhgbi/login/cross/domain",
+      data: {
+        fine_username: "bigscreen",
+        fine_password: "bigscreen_2019",
+        validity: -1
+      },
+      timeout: 5000,
+      dataType: "jsonp",
+      jsonp: "callback",
+      success: function(res) {
+        // alert('登录成功');
+        var token = res.accessToken;
+        // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+        // 原则上登录成功后不用再带token参数，当前有bug正在修复
+        // document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+        // document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+      },
+      error: function() {
+        alert("登录失败");
+      }
+    });
 
     setTimeout(() => {
       this.refreshData();
@@ -834,14 +950,13 @@ export default {
     beltData: function(data) {
       this.init(data);
     },
-    historyData:function(data){
-      if(data){
-      //   var SKT = document.getElementById("skorkess");
-      // console.log(SKT)
-      //   console.log(data)
+    historyData: function(data) {
+      if (data) {
+        //   var SKT = document.getElementById("skorkess");
+        // console.log(SKT)
+        //   console.log(data)
         this.timeInit(data);
       }
-
     }
   }
 };
@@ -880,12 +995,18 @@ iframe {
   background: url("../assets/BG.png") top center no-repeat;
   background-size: 3200px;
   width: 3200px;
+  height: 1080px;
 }
 .can {
-  position: relative;
+  position: absolute;
   top: 0;
   left: 77px;
   /* z-index: 1; */
+}
+.smile {
+  position: absolute;
+  top: 0;
+  left: 77px;
 }
 .stack {
   position: absolute;
@@ -896,6 +1017,7 @@ iframe {
   position: absolute;
   width: 50px;
   height: 50px;
+  color: #fff;
   /* opacity: 0.8; */
 }
 .stack .coalpile img {
@@ -939,6 +1061,7 @@ iframe {
   position: absolute;
   display: inline-block;
   z-index: 6;
+  color: #fff;
   /* transform: rotateY(180deg) */
 }
 .stack .stacker .stack {
@@ -975,6 +1098,7 @@ iframe {
 .ship span {
   width: 180px;
   height: 200px;
+  color: #fff;
   border: 0;
   position: absolute;
   display: none;
@@ -996,27 +1120,37 @@ iframe {
 }
 .shiploader span {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background: url("../assets/shiploader.png") bottom center no-repeat;
-  background-size: 50px;
-}
-.shiploader .transfrom {
   width: 60px;
   height: 50px;
   background-size: 60px;
+}
+.shiploader .gzdown {
+  background-image: url("../assets/shiploadergzdown.png");
+}
+.shiploader .kxdown {
+  background-image: url("../assets/shiploadergzdown.png");
+}
+.shiploader .yxdown {
+  background-image: url("../assets/shiploaderyxdown.gif");
+}
 
-  background-image: url("../assets/shiploadertwo.png");
+.shiploader .left {
+  background-image: url("../assets/shiploaderleft.png");
 }
-.shiploader .one {
-  width: 50px;
-  height: 50px;
-  background-image: url("../assets/shiploaderone.png");
+.shiploader .yleft {
+  background-image: url("../assets/shiploaderyleft.gif");
 }
-.shiploader .ones {
-  width: 50px;
-  height: 50px;
-  background-image: url("../assets/shiploaderone.png");
+.shiploader .gleft {
+  background-image: url("../assets/shiploaderleft.png");
+}
+.shiploader .up {
+  background-image: url("../assets/shiploaderup.png");
+}
+.shiploader .gup {
+  background-image: url("../assets/shiploadergup.png");
+}
+.shiploader .yup {
+  background-image: url("../assets/shiploaderyup.gif");
 }
 .stack .dumper span {
   width: 120px;
@@ -1057,7 +1191,7 @@ body {
   padding-top: 7px;
 }
 .timeaxis .transverse {
-  width: 3000px;
+  width: 6000px;
   float: right;
   overflow: hidden;
 }
@@ -1078,15 +1212,28 @@ body {
   height: 500px;
   padding-right: 20px;
   padding-left: 20px;
-  /* background-color: #aaa; */
   background-color: #111d3a;
+}
+.timeaxis .timebox {
+  height: 470px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .timeaxis .timegauge {
   position: absolute;
-  left: 0;
+  left: -1px;
   top: 0;
   z-index: 0;
+}
+.timeaxis .timegauge #skorkess {
   opacity: 0.6;
+}
+.timeaxis .timegauge #skorkeTime {
+  position: absolute;
+  left: -6px;
+  top: -10px;
 }
 .timeaxis .timecenter {
   width: 1200px;
