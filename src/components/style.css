@@ -1,0 +1,941 @@
+h3 {
+  margin: 40px 0 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+a {
+  color: #42b983;
+}
+
+.hello {
+  width: 5760px;
+  height: 1080px;
+  overflow: hidden;
+  background: url("../assets/BG.png") top center no-repeat;
+  background-size: 5760px;
+}
+
+iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.skorke {
+  position: absolute;
+  left: 1280px;
+  top: -4px;
+  /* background: url("../assets/BG.png") top center no-repeat; */
+  /* background-size: 3200px; */
+  width: 3200px;
+  height: 1080px;
+}
+
+.can {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  /* z-index: 1; */
+}
+
+.smile {
+  position: absolute;
+  top: 0;
+  left: 0px;
+}
+
+.smile .showPopup {
+  display: none;
+}
+
+.stack {
+  position: absolute;
+  left: 50px;
+  top: 5px;
+}
+
+.stack .coalpile span {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  color: #fff;
+  /* opacity: 0.8; */
+}
+.stack .coalpile .blank {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  color: #fff;
+  background-color: #fff;
+  opacity: 0;
+  z-index: 200;
+}
+
+.stack .coalpile .slio {
+  position: absolute;
+  width: 63px;
+  height: 62px;
+  opacity: 0.8;
+  background: url("../assets/silo.png") top center no-repeat;
+  background-size: 63px;
+  z-index: 10;
+  /* background-position-y: -10px; */
+}
+
+.stack .coalpile .gw {
+  background: url("../assets/silogw.png") top center no-repeat;
+  background-size: 63px;
+}
+
+.stack .coalpile .smallRed {
+  background: url("../assets/maxbigRed.png") bottom left no-repeat;
+  background-size: 30px;
+}
+
+.stack .coalpile .minddleRed {
+  background: url("../assets/maxbigRed.png") bottom left no-repeat;
+  background-size: 35px;
+}
+
+.stack .coalpile .bigRed {
+  background: url("../assets/maxbigRed.png") bottom left no-repeat;
+  background-size: 40px;
+}
+
+.stack .coalpile .maxRed {
+  background: url("../assets/maxbigRed.png") bottom left no-repeat;
+  background-size: 45px;
+}
+
+.stack .coalpile .maxbigRed {
+  background: url("../assets/maxbigRed.png") bottom left no-repeat;
+  background-size: 50px;
+}
+
+.stack .coalpile .small {
+  background: url("../assets/maxbig.png") bottom left no-repeat;
+  background-size: 30px;
+}
+
+.stack .coalpile .minddle {
+  background: url("../assets/maxbig.png") bottom left no-repeat;
+  background-size: 35px;
+}
+
+.stack .coalpile .big {
+  background: url("../assets/maxbig.png") bottom left no-repeat;
+  background-size: 40px;
+}
+
+.stack .coalpile .max {
+  background: url("../assets/maxbig.png") bottom left no-repeat;
+  background-size: 45px;
+}
+
+.stack .coalpile .maxbig {
+  background: url("../assets/maxbig.png") bottom left no-repeat;
+  background-size: 50px;
+}
+
+.stack .coalpile .null {
+  /* background-color: blueviolet; */
+}
+
+.stack .stacker span {
+  width: 150px;
+  height: 60px;
+  background: url("../assets/take.png") top center no-repeat;
+  background-size: 50px;
+  position: absolute;
+  display: inline-block;
+  z-index: 30;
+  color: #fff;
+  /* transform: rotateY(180deg) */
+}
+
+.stack .stacker img {
+  display: none;
+}
+
+.stack .stacker .gz img {
+  display: inline-block;
+  position: absolute;
+  width: 20px;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: 99;
+  top: 0px;
+  left: 115px;
+}
+
+.stack .coalpile .frame {
+  width: 80px;
+  position: absolute;
+}
+
+.stack .stacker .stack {
+  background-image: url("../assets/stack.png");
+  background-position: 90% 100%;
+  background-position-y: 13px;
+}
+
+.stack .stacker .stackUp {
+  background-image: url("../assets/stackUp.gif");
+  background-position: 10% 100%;
+  background-position-y: 9px;
+}
+
+.stack .stacker .stackDown {
+  background-image: url("../assets/stackDown.gif");
+  background-position: 10% 100%;
+  background-position-y: 12px;
+}
+
+.stack .stacker .take {
+  height: 65px;
+  background-image: url("../assets/take.png");
+
+  background-position: 94% 100%;
+}
+
+.stack .stacker .takeUp {
+  background-image: url("../assets/takeUp.gif");
+  background-position: 10% 100%;
+  background-position-y:9px;
+}
+
+.stack .stacker .takeDown {
+  background-image: url("../assets/takeDown.gif");
+  background-position: 20% 100%;
+  background-position-y: 12px;
+}
+
+.ship,
+.addship {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.ship div {
+  width: 180px;
+  height: 80px;
+  color: #fff;
+  border: 0;
+  position: absolute;
+  display: none;
+  background: url("../assets/ship.png") top center no-repeat;
+  background-size: 130px;
+  background-position-y: -145px;
+}
+
+.addship p {
+  position: absolute;
+  top: 60px;
+  left: 70px;
+  font-size: 14px;
+}
+
+.addship .show {
+  display: inline-block;
+}
+
+.addship div {
+  width: 180px;
+  height: 80px;
+  color: #fff;
+  border: 0;
+  position: absolute;
+  display: none;
+  background: url("../assets/shipadd.png") top center no-repeat;
+  background-size: 80px;
+  background-position-y: 40px;
+}
+
+.ship .kx {
+  background-position-y: -275px;
+}
+
+.ship .wc {
+  background-position-y: -15px;
+}
+
+.ship .yx {
+  background-position-y: -145px;
+}
+
+.ship div p {
+  position: absolute;
+  font-size: 16px;
+}
+
+.ship div .top {
+  top: 0px;
+  left: 50px;
+}
+
+.ship div .left {
+  top: 30px;
+  left: -10px;
+}
+
+.ship div .down {
+  bottom: -35px;
+  left: 80px;
+}
+
+.ship .transfrom {
+  background: none;
+}
+
+.ship .transfrom span {
+  background: url("../assets/shipTansfrom.png") top center no-repeat;
+  background-size: 130px;
+  width: 180px;
+  height: 80px;
+  display: inline-block;
+  background-position-y: -154px;
+}
+
+/* .ship .transfrom.yx span{
+background-position-y: 100px;
+} */
+.ship .wc span {
+  background-position-y: -24px;
+}
+
+.ship .kx span {
+  background-position-y: -285px;
+}
+
+.ship .yx span {
+  background-position-y: -154px;
+}
+
+.ship .show {
+  display: inline-block;
+}
+
+.shiploader {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.shiploader span {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-size: 60px;
+}
+
+.shiploader span img {
+  display: none;
+  width: 20px;
+  position: absolute;
+  top: -15px;
+  left: 13px;
+}
+
+.shiploader .gz img {
+  z-index: 99;
+  display: inline-block;
+}
+
+.shiploader .gzdown {
+  background-image: url("../assets/shiploaderdown.png");
+}
+
+.shiploader .kxdown {
+  background-image: url("../assets/shiploaderdown.png");
+}
+
+.shiploader .yxdown {
+  background-image: url("../assets/shiploaderyxdown.gif");
+}
+
+.shiploader .left {
+  background-image: url("../assets/shiploaderleft.png");
+  background-size: 60px;
+}
+
+.shiploader .yleft {
+  background-image: url("../assets/shiploaderyleft.gif");
+  background-size: 60px;
+  /* width: 80px; */
+  /* height: 45px; */
+}
+
+.shiploader .gleft {
+  background-image: url("../assets/shiploaderleft.png");
+  background-size: 60px;
+  width: 60px;
+  height: 60px;
+}
+
+.shiploader .up {
+  background-image: url("../assets/shiploaderup.png");
+}
+
+.shiploader .gup {
+  background-image: url("../assets/shiploaderup.png");
+}
+
+.shiploader .yup {
+  background-image: url("../assets/shiploaderyup.gif");
+}
+
+.stack .dumper span img {
+  position: absolute;
+  display: none;
+  top: -10px;
+  left: 40px;
+  width: 20px;
+}
+
+.stackname {
+  position: absolute;
+  font-size: 14px;
+}
+
+.stackname p {
+  position: absolute;
+  width: 100px;
+}
+
+.stack .dumper .transfrom img {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+  width: 20px;
+}
+
+.stack .dumper .gz img {
+  display: block;
+  z-index: 99;
+}
+
+.stack .dumper .gzT img {
+  z-index: 99;
+  display: block;
+}
+
+.stack .dumper span {
+  width: 120px;
+  height: 100px;
+  background: url("../assets/dumperTansfrom.png") top center no-repeat;
+  position: absolute;
+  background-size: 80px;
+}
+
+.stack .dumper .yx {
+  background: url("../assets/dumperTansfromok.png") top center no-repeat;
+  background-size: 80px;
+}
+
+.stack .dumper .kxT {
+  background: url("../assets/dumper.png") top center no-repeat;
+  background-size: 100px;
+}
+
+.stack .dumper .yxT {
+  background: url("../assets/dumperok.png") top center no-repeat;
+  background-size: 100px;
+}
+
+.track {
+  position: absolute;
+  top: 150px;
+  left: 2200px;
+  width: 900px;
+  height: 500px;
+}
+
+.track span {
+  position: absolute;
+  width: 122px;
+  height: 99px;
+  background-image: url("../assets/trackT.png");
+  background-size: 122px;
+}
+
+.track span img {
+  width: 200px;
+}
+
+.track .transfrom {
+  width: 200px;
+  height: 18px;
+  background-image: url("../assets/track.png");
+  background-size: 200px;
+}
+
+.track em {
+  width: 100px;
+  height: 96px;
+  display: inline-block;
+  background-image: url("../assets/trainoneT.png");
+  background-size: 100px;
+  position: absolute;
+  top: -8px;
+  left: 9px;
+}
+
+.track .transfrom em {
+  width: 140px;
+  height: 24px;
+  display: inline-block;
+  background-image: url("../assets/trainone.png");
+  background-size: 140px;
+  position: absolute;
+  top: -8px;
+  left: 0px;
+}
+
+.track .one {
+  background-image: url("../assets/trainoneT.png");
+}
+
+.track .two {
+  background-image: url("../assets/traintwoT.png");
+}
+
+.track .three {
+  background-image: url("../assets/trainthrT.png");
+}
+
+.track .transfrom .one {
+  background-image: url("../assets/trainone.png");
+}
+
+.track .transfrom .two {
+  background-image: url("../assets/traintwo.png");
+}
+
+.track .transfrom .three {
+  background-image: url("../assets/trainthr.png");
+}
+
+.track .null {
+  background-image: url("");
+}
+
+.slio span {
+  width: 60px;
+  height: 50px;
+  background: url("../assets/siloloader.png") top center no-repeat;
+  position: absolute;
+  background-size: 45px;
+}
+
+body {
+  position: relative;
+  /* top: 5px; */
+}
+
+.timeaxis .type {
+  width: 100%;
+  height: 26px;
+}
+
+.timeaxis .timebg {
+  position: absolute;
+  bottom: -35px;
+  left: 360px;
+  width: 500px;
+}
+
+.timeaxis .timeBox {
+  width: 1100px;
+  float: left;
+  overflow: hidden;
+  padding-top: 7px;
+}
+
+.timeaxis .transverse {
+  width: 6000px;
+  float: right;
+  overflow: hidden;
+}
+
+.timeaxis .title {
+  float: left;
+  color: #fff;
+  font-size: 12px;
+  line-height: 20px;
+  height: 20px;
+  width: 40px;
+}
+
+.timeaxis {
+  position: absolute;
+  top: 530px;
+  left: 4510px;
+  width: 1200px;
+  height: 500px;
+  padding-right: 20px;
+  padding-left: 20px;
+  /* background-color: #111d3a; */
+}
+
+.timeaxis .timeboxs {
+  height: 470px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: space-around;
+}
+
+.timeaxis .timegauge {
+  position: absolute;
+  left: -1px;
+  top: 0;
+  z-index: 0;
+}
+
+.timeaxis .timegauge #skorkess {
+  opacity: 0.2;
+}
+
+.timeaxis .timegauge #skorkeTime {
+  position: absolute;
+  left: -6px;
+  top: -10px;
+}
+
+.timeaxis .timecenter {
+  width: 1200px;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
+.timeaxis .swiper-container {
+  height: 500px;
+  cursor: inherit !important;
+}
+
+.timeaxis .transverse .timeyx {
+  background-color: #02feff;
+}
+
+.timeaxis .transverse .timeyx:hover {
+  background-color: #02ffcc;
+}
+
+.timeaxis .transverse .timekx {
+  background-color: #2856d5;
+}
+
+.timeaxis .transverse .timekx:hover {
+  background-color: #28a1fe;
+}
+
+.timeaxis .transverse .timegz {
+  background-color: #a03b34;
+}
+
+.timeaxis .transverse .timegz:hover {
+  background-color: #141313;
+}
+
+.timeaxis .transverse .timetl {
+  background-color: #7070f5;
+}
+
+.timeaxis .transverse .timetl:hover {
+  background-color: #bc05e3;
+}
+
+.timeaxis .elementBox p {
+  margin: 0 15px;
+  text-align: left;
+}
+
+.timeaxis .swiper-pagination-bullet {
+  background-color: #2779a2;
+}
+
+.timeaxis .elementBox {
+  width: 150px;
+  height: 110px;
+  /* background-color: rgb(39, 33, 78); */
+  position: absolute;
+  /* border: solid 1px red; */
+  top: 100px;
+  padding-top: 10px;
+  left: 100px;
+  z-index: 10;
+  font-size: 16px;
+  color: beige;
+  line-height: 20px;
+  display: inline-block;
+  padding-top: 10px;
+  background: url("../assets/timepopBG.jpg") top center no-repeat;
+  background-size: 150px;
+  background-position-y: -2px;
+}
+
+.weather {
+  position: absolute;
+  width: 700px;
+  height: 70px;
+  font-size: 18px;
+  top: 30px;
+  left: 1370px;
+  line-height: 30px;
+}
+
+.weather em {
+  position: absolute;
+  left: -40px;
+  top: 12px;
+  display: inline-block;
+  width: 500px;
+  height: 50px;
+  background-image: url("../assets/weatherBg.png");
+  /* background: url("../assets/weatherBg.png") top center no-repeat; */
+  background-repeat: no-repeat;
+  /* background-position: 0% 0%; */
+  background-size: 100%;
+  opacity: 0.8;
+
+  /* background-size: 470px; */
+}
+
+.namebg {
+  width: 600px;
+  height: 100px;
+  background: url("../assets/nameBg.png") top center no-repeat;
+  position: absolute;
+  top: -33px;
+  left: 1184px;
+  opacity: 0.4;
+}
+
+.weather p {
+  height: 30px;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: left;
+}
+
+.weather p span {
+  height: 30px;
+  display: inline-block;
+}
+
+.weather .cc {
+  background: url("../assets/CC.png") top left no-repeat;
+  padding-left: 22px;
+  background-size: 16px;
+}
+
+.weather .sd {
+  background: url("../assets/sd.png") top left no-repeat;
+  padding-left: 22px;
+  background-size: 19px;
+  background-position-y: 4px;
+}
+
+.weather .fx {
+  background: url("../assets/fx.png") top left no-repeat;
+  padding-left: 22px;
+  background-size: 19px;
+  background-position-y: 4px;
+}
+
+.weather .fs {
+  background: url("../assets/fs.png") top left no-repeat;
+  padding-left: 22px;
+  background-size: 19px;
+  background-position-y: 4px;
+}
+
+.weather .njd {
+  background: url("../assets/njd.png") top left no-repeat;
+  padding-left: 22px;
+  background-size: 19px;
+  background-position-y: 4px;
+}
+
+.timeaxis .transverse span {
+  float: right;
+  width: 4px;
+  height: 10px;
+  display: inline-block;
+  background-color: antiquewhite;
+}
+
+/* .timeaxis .transverse span:hover{
+animation:myfirst 3s;
+}
+@keyframes myfirst
+{
+0%   {background:rgb(218, 207, 96);}
+100%  {background:rgb(238, 226, 8);}
+} */
+.timeaxis .titlemax {
+  position: absolute;
+  top: -80px;
+  left: 460px;
+  width: 300px;
+  font-size: 26px;
+}
+
+.timeaxis .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+}
+
+.nowtime {
+  position: absolute;
+  width: 200px;
+  top: 5px;
+  left: 2740px;
+  font-size: 18px;
+  white-space: pre;
+}
+
+.nowtime span {
+  position: absolute;
+  top: 38px;
+  left: 15px;
+  font-size: 20px;
+}
+
+.nowtime .year {
+  left: 30px;
+  top: 43px;
+
+}
+
+.nowtime .time {
+  left: 220px;
+  top: 5px;
+  font-size: 70px;
+}
+
+.nowtime em {
+  width: 300px;
+  height: 100px;
+  position: absolute;
+  top: 8px;
+  left: -27px;
+  display: inline-block;
+  width: 300px;
+  background: url("../assets/nowtimeBg.png") top center no-repeat;
+  opacity: 0.6;
+  background-size: 300px;
+}
+
+.powerPlant {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: url("../assets/powerPlant.png") top center no-repeat;
+  background-size: 250px;
+  top: 380px;
+  left: 4150px;
+  /* z-index: 20; */
+}
+
+.legend {
+  position: absolute;
+  top: 880px;
+  left: 1290px;
+
+}
+
+.legend img {
+  width: 230px;
+}
+.coalpile .yardName {
+  /* position: absolute;
+  top: 20px;
+  left: 15px;
+  */
+  width: 100px;
+  text-align: left;
+
+}
+.stackbutton  {
+ position: absolute; 
+ left: 3020px;
+ top: 730px;
+  z-index: 300;
+  width: 150px;
+
+}
+.stackbutton button{
+  background: none;
+border: #fff 2px solid;
+border-radius: 4px;
+  width: 120px;
+  margin-bottom: 20px;
+  opacity: 0.6;
+  color: #fff;
+  height: 36px;
+  font-size: 16px;
+}
+.stackbutton button:hover{
+  opacity: 1;
+
+  /* background-color: rgb(219, 230, 231); */
+}
+.stackbutton button:nth-child(1){
+  border-color: #3482b4;
+}
+.stackbutton button:nth-child(2) {
+  border-color: #9e951f;
+}
+.stackbutton button:nth-child(3) {
+  border-color: #80cad1;
+}
+.stackbutton button:nth-child(4) {
+  border-color: #a03d3d;
+}
+.stack{
+  position: absolute;
+  /* z-index: 100; */
+}
+.coalpile .siloName {
+  background: none;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+}
+.shiplaName{
+  position: absolute;
+  top: 25px;
+  left: 15px;
+}
+.stackerName{
+  position: absolute;
+  top: -10px;
+  left: 55px;
+}
+.slioName{
+  position: absolute;
+  top: -20px;
+  left: 10px;
+}
+.stackdetails{
+  position: absolute;
+  top: 600px;
+  left: 1500px;
+  width: 150px;
+  border: 1px solid #fff;
+  z-index: 210;
+  background-color: rgba(124, 119, 119, 0.7);
+}

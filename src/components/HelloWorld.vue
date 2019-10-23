@@ -1,26 +1,87 @@
+<style>
+@import "./style.css";
+</style>
 <template>
   <div class="hello">
-    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;top:-30px;left: 0px;"></iframe> -->
-    <!-- <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;top:-30px;left:4480px;"></iframe> -->
-    <div class="timeaxis" @mouseenter="on_top_enter" @mouseleave="on_top_leave">
+    <!-- <iframe id="myframe2"  width="1280px" height="1110px" frameborder="0" scrolling="auto" style="position:absolute;left: 0px;"></iframe>  -->
+    <!-- <iframe id="myframe1"  width="1280px" height="1110px" frameborder="0" scrolling="auto"style="position:absolute;left:4480px;"></iframe>  -->
+    <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/2e78077d3e424219a89cccdab450109c?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjJlNzgwNzdkM2U0MjQyMTlhODljY2NkYWI0NTAxMDljIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.7u3sgOzY3KQRvEENpgBTEjRjosTtv53adFL1Ge_GQdU" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe> -->
+
+    <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/3662f732ad8d416ab1cf5da31803248e?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjM2NjJmNzMyYWQ4ZDQxNmFiMWNmNWRhMzE4MDMyNDhlIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.03qQ3ZbNc-VQhJhcjinV5K-6cRi0e9gvKd-7J4xzEXA" frameborder="0" style="position:absolute;left: 4000px;top:-60px"  width="800px" height="800px" scrolling="auto"></iframe> -->
+    <!-- <img src="../assets/shipleft.png" style="position:absolute;left: 1380px;top:490px;width:200px" alt=""> -->
+  
+    <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/dfce577e4fa44a039f4219975cb949e7?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6ImRmY2U1NzdlNGZhNDRhMDM5ZjQyMTk5NzVjYjk0OWU3IiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.XuZ_H2gSC2Z8hyAuK5ANmNHQU8wlUqPSOTcQIeAhG3Y" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe>
+    <iframe style="position:absolute;left:0px; top:35px" width="1280px" height="1110px" src="http://10.60.127.130/hhgbi/v5/design/report/share/6d6cb0683bbf44e8bd406119943f2943?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjZkNmNiMDY4M2JiZjQ0ZThiZDQwNjExOTk0M2YyOTQzIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.3a7-SHQz9ismpR2Ixt6xsjzygOO5_gIkDwdO9lr7fgU" frameborder="0"></iframe>
+    <iframe style="position:absolute;left: 1450px;top:900px" src="http://10.60.127.130/hhgbi/view/report?viewlet=wjytest/%E6%BD%AE%E4%BD%8D%E8%AE%A1.frm" frameborder="0"></iframe>  -->
+  <stackdetails v-show='this.stackShow' :stackdata="this.stackdetails"></stackdetails>
+    <div class="weather" v-if="weatherData">
+      <span class="namebg"></span>
+      <em></em>
+      <p>
+        <span class="cc">{{ weatherData.rows[0][0].toFixed(1) }}℃</span>
+        &nbsp;
+        <span class="sd">{{ weatherData.rows[0][1].toFixed(1) }}%</span>
+        &nbsp;
+        <span class="fx">{{ weatherData.rows[0][2] }}°</span>
+        &nbsp;
+        <span class="fs">{{ weatherData.rows[0][3].toFixed(1) }}m/s</span>
+        &nbsp;
+        <span class="njd">{{ weatherData.rows[0][4] }}m</span>
+      </p>
+    </div>
+    <div class="powerPlant"></div>
+    <div class="legend">
+      <img src="../assets/Legend.png" alt="" />
+    </div>
+
+    <!-- <div class="timeaxis" @mouseover="elementBShow()" @mouseenter="on_top_enter" @mouseleave="on_top_leave">
+      <img src="../assets/timeaxis.png" class="timebg" alt="">
+      <p class="titlemax">设备运行状态</p>
       <div class="timegauge">
         <canvas ref="canvas" id="skorkess" width="1280" height="500">
           标尺
         </canvas>
         <canvas id="skorkeTime" width="1280" height="50"> </canvas>
       </div>
+      <div 
+      class="elementBox" 
+      :style="{top:this.timepopup.value.y + 'px',left:this.timepopup.value.x-4470 + 'px'}"
+      v-if="this.timepopup.show" 
+      >
+        <p>
+          设备名称:{{this.timepopup.value.name}}
+        </p>
+        <p>
+          开始时间:{{this.timepopup.value.startime}}
+        </p>
+        <p>
+          结束时间:{{this.timepopup.value.endtime}}
+        </p>
+        <p>
+          设备状态:{{this.timepopup.value.status}}
+        </p>
+      </div>
       <div class="timecenter" v-if="historyData">
-        <swiper :options="swiperOption" class="swiper-wrap" ref="mySwiper">
+        <swiper :options="swiperOption" class="swiper-wrap" ref="mySwiper" v-if='showNo'>
           <swiper-slide v-for="(item, index) in historyData" :key="index">
-            <div class="timebox">
+            <div class="timeboxs">
               <div v-for="(device, indexO) in item" class="type">
                 <span class="title">{{ titleName(indexO) }}:</span>
                 <div class="timeBox" :style="timeBoxStyle(historyData)">
                   <div class="transverse">
                     <span
+                    class="luprivate"
                       v-for="(unit, indexT) in device"
+                      :class="timeClass(unit)"
                       :style="timeStyle(unit)"
+                      :data-status="unit.status"
+                      :data-endtime="unit.endtime/1000"
+                      :data-startime="unit.startime/1000"
+                      :data-name="unit.device_name"
                     >
+                    <em>
+                      
+                    </em>
                     </span>
                   </div>
                 </div>
@@ -35,7 +96,8 @@
           ></div>
         </swiper>
       </div>
-    </div>
+    </div> -->
+    <!-- <shiptime :shiptimedata="this.shipData"></shiptime> -->
     <div class="skorke">
       <div class="svgvan">
         <canvas
@@ -45,113 +107,167 @@
           width="3200"
           height="1080"
         >
-          第一条线
+          皮带
         </canvas>
-        <svg
-          class="smile"
-          version="1.1"
-          width="5200"
-          height="1080"
-          baseProfile="full"
-          v-if="svgdatas"
-        >
-          <defs>
-            <radialGradient
-              id="grad1"
-              cx="50%"
-              cy="50%"
-              r="50%"
-              fx="50%"
-              fy="50%"
-            >
-              <stop offset="0%" style="stop-color:rgba(255,0,0,1)" />
-              <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)" />
-            </radialGradient>
-          </defs>
-
-          <circle
-            v-for="(value,index) in this.svgdatas"
-            :cx="0"
-            :cy="0"
-            r="6"
-            fill="url(#grad1)"
-          >
-            <animateMotion
-              :path="svgpath(value)"
-              begin="0s"
-              :dur="svgtime(value)"
-              repeatCount="indefinite"
-              from="1"
-              to="3"
-            />
-          </circle>
-        </svg>
+        <beltBall :svgdata="this.svgdatas"></beltBall>
+        <!-- <beltPopup
+          :stackerDatas="this.machinePosition"
+          :popupDatas="this.popupData"
+        ></beltPopup> -->
+      </div>
+      <div class="stackbutton">
+        <button v-on:click="showDis()">展示堆场号</button>
+        <button v-on:click="showDisT()">展示堆场量</button>
+        <button v-on:click="showDisO()">展示设备号</button>
+        <button v-on:click="showDisS()">展示装船量</button>
       </div>
       <div class="stack" v-if="stackData">
+        <div class="stackname">
+          <p
+            v-for="(name, index) in positionData.stackname"
+            :style="{ left: name.x - 105 + 'px', top: name.y - 15 + 'px' }"
+          >
+            {{ index }}#
+          </p>
+          <p
+            v-for="(name, index) in positionData.siloname"
+            :style="{ left: name.x - 105 + 'px', top: name.y - 20 + 'px' }"
+          >
+            {{ index }}
+          </p>
+        </div>
         <div class="coalpile">
+           <i class="blank"
+          v-for="(key, index) in positionData.stack"
+            @click="stackNames(index,key)"
+            :style="{
+              left: key.x - 10 + 'px',
+              top: key.y - 30 + 'px'
+            }"></i>
           <span
             v-for="(key, index) in positionData.stack"
-            :style="{ left: key.x + 'px', top: key.y - 20 + 'px' }"
+            :style="{
+              left: key.x - 10 + 'px',
+              top: key.y - 30 + 'px',
+              zIndex: key.zindex
+            }"
             :class="stackStatus(index)"
             @click="stackNames(index)"
-            :key="index"
-            >{{ index }}</span
+            :key="index + 'i'"
           >
+            <p class="yardName" v-show="yardName">
+              {{ index }}
+            </p>
+            <p class="yardName" v-show="yardSize">
+              {{ stackSize(index) }}
+            </p>
+          </span>
           <img
-            src="../assets/silo.png"
-            v-for="(key, index) in positionData.silo"
-            :style="{ left: key.x + 50 + 'px', top: key.y - 15 + 'px' }"
-            :key="index"
+            src="../assets/stackframe.png"
+            v-for="(key, index) in positionData.stack"
+            :style="{ left: key.x - 25 + 'px', top: key.y - 55 + 'px' }"
+            :key="index + 1"
+            :class="[stackframe(index)]"
             alt=""
           />
+          <i class="blank"
+            @click="stackNames(index,key)"
+            v-for="(key, index) in positionData.silo"
+            :style="{ left: key.x - 10 + 'px', top: key.y - 20 + 'px' }"
+          ></i>
+          <p
+            v-for="(key, index) in positionData.silo"
+            :style="{ left: key.x - 15 + 'px', top: key.y - 40 + 'px' }"
+            :key="index"
+            :class="[stacksilo(index)]"
+          >
+            <span class="siloName" v-show="yardName">
+              {{ index }}
+            </span>
+            <P v-show="yardSize"> {{ stackSize(index) }}</P>
+          </p>
         </div>
         <div class="stacker" v-if="beltData">
           <span
             :style="stackerPosition(index)"
             v-for="(key, index) in positionData.stacker"
             :key="index"
-            :class="stackerClass(index)"
-            @click="stackNames(index)"
-            >{{ index }}
+            :class="[stackerClass(index)]"
+          >
+            <p class="stackerName" v-show="deviceName">{{ index }}</p>
+            <img src="../assets/stackgz.png" alt="" />
           </span>
         </div>
         <div class="slio">
           <span
             v-for="(key, index) in positionData.silolader"
             :style="slioloaderPosition(key)"
+            :class="[stackerrer(index)]"
             :key="index"
-          >
+            ><p class="slioName" v-show="deviceName">{{ key }}</p>
+            
           </span>
         </div>
         <div class="dumper">
           <span
-            src="../assets/dumper.png"
             v-for="(key, index) in positionData.dumper"
-            :style="{ left: key.x + 50 + 'px', top: key.y - 25 + 'px' }"
+            :style="{ left: key.x + 'px', top: key.y + 'px' }"
             :key="index"
-            :class="{ transfrom: key.transfrom }"
+            :class="[stackerrer(index), dumpertransfrom(key.transfrom)]"
             alt=""
-          ></span>
+            ><p v-show="deviceName">{{ index }}</p>
+            <img src="../assets/stackgz.png" alt="" />
+          </span>
         </div>
       </div>
       <div class="ship" v-if="shipData">
-        <span
+        <div
           v-for="(ship, index) in positionData.ship"
-          :style="{ left: ship.x + 'px', top: ship.y + 40 + 'px' }"
-          :class="{ transfrom: ship.transfrom, show: shipShow(index) }"
+          :class="[
+            shiptransfrom(ship.transfrom),
+            shipShow(index),
+            shipstatus(index)
+          ]"
+          :style="{ left: ship.x - 10 + 'px', top: ship.y + 2 + 'px' }"
           :key="index"
           alt=""
-          >{{ shipName(index) }}
-        </span>
+        >
+          <span>
+            <p v-show="!shipNameSize" :class="[shipnames(index)]">{{ shipName(index) }}</p>
+            <p v-show="shipNameSize" :class="[shipnames(index)]">{{ shipSize(index) }}</p>
+          </span>
+        </div>
+      </div>
+      <div class="addship" v-if="shipData">
+        <div
+          v-for="(ship, index) in positionData.addship"
+          :class="[shipShow(index)]"
+          :style="{ left: ship.x - 10 + 'px', top: ship.y - 2 + 'px' }"
+        >
+          <p>{{ shipName(index) }}</p>
+        </div>
       </div>
       <div class="shiploader" v-if="beltData">
         <span
           v-for="(position, index) in positionData.shiploader"
           :key="index"
           :style="shiploaderPosition(index)"
-          :class="[shipOne(index)]"
+          :class="[shipOne(index), index, stackerrer(index)]"
+          :ref="index"
           alt=""
-        ></span>
+        >
+          <p class="shiplaName" v-show="deviceName">{{ index }}</p>
+          <img src="../assets/stackgz.png" alt="" />
+        </span>
+      </div>
+      <div class="track" v-if="trainData">
+        <span
+          v-for="(item, index) in positionData.track"
+          :style="{ left: item.x + 'px', top: item.y + 'px' }"
+          :class="{ transfrom: item.transfrom }"
+        >
+          <em :class="[train(index)]"></em>
+        </span>
       </div>
     </div>
   </div>
@@ -161,16 +277,30 @@
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { clearInterval } from "timers";
+import beltBall from "./beltBall";
+import shiptime from "./shiptime";
+import stackdetails from './stackdetails';
+import beltPopup from "./beltPopup";
 import positionData from "../assets/skroke.js";
 import jq from "jquery";
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String
-  },
   data() {
     const that = this;
     return {
+       stackdetails:{
+        name:'',
+        capacity:'',
+        x:'',
+        y:''
+        
+      },
+      yardName: false,
+      stackShow:false,
+      yardSize: false,
+      deviceName: false,
+      shipNameSize:false,
+      shiploaderdata: "",
       //皮带装船机等数据
       beltData: null,
       // 煤堆数据
@@ -179,9 +309,22 @@ export default {
       shipData: null,
       // 时间轴
       historyData: null,
+      trainData: null,
+      weatherData: null,
+      showNo: true,
       //本地定位数据
       positionData: positionData,
-      svgdatas:[],
+      machinePosition: [],
+      timepopup: {
+        value: 0,
+        show: false
+      },
+      temporary: {
+        stacker: []
+      },
+      svgdatas: [],
+      popupData: [],
+
       // 装船机位置
       berthPosition: {},
       imgIndex: 1,
@@ -194,7 +337,7 @@ export default {
         initialSlide: 0,
         //自动播放
         autoplay: {
-          delay: 3000000,
+          delay: 30000,
           stopOnLastSlide: false,
           /* 触摸滑动后是否继续轮播 */
           disableOnInteraction: false
@@ -206,6 +349,45 @@ export default {
         //小手掌抓取滑动
         grabCursor: true,
         on: {
+          click: function(e) {
+            if (e.srcElement.className.indexOf("luprivate") == -1) {
+              return false;
+            }
+            let value = JSON.parse(JSON.stringify(e.srcElement.dataset));
+            if (!!Number(value.name)) {
+              value.name = "CD" + value.name;
+            }
+            switch (value.status) {
+              case "yx":
+                value.status = "运行";
+                break;
+              case "tl":
+                value.status = "铁路";
+                break;
+              case "kx":
+                value.status = "空闲";
+                break;
+              case "gz":
+                value.status = "故障";
+                break;
+            }
+            let startT = new Date(Number(value.startime));
+            let endT = new Date(Number(value.endtime));
+            value.startime = startT.getHours() + ":" + startT.getMinutes();
+            value.endtime = endT.getHours() + ":" + endT.getMinutes();
+            value.x = e.pageX - 20;
+            value.y = e.pageY - 500;
+            console.log(value.x);
+            value.y > 377 ? (value.y = 377) : "";
+            value.x > 5510 ? (value.y = 5510) : "";
+            that.showValue(value);
+            // console.log(e)
+            let elemen = e.view;
+            // console.log(e.view.getComputedStyle(elemen))
+            //     // const realIndex = this.realIndex;
+            //     // console.log(e.swiper)
+            //     // vm.swiperOption(realIndex)    //要执行函数
+          },
           //滑动之后回调函数
           slideChangeTransitionStart: function() {
             /* realIndex为滚动到当前的slide索引值 */
@@ -224,27 +406,159 @@ export default {
   created() {},
   computed: {},
   components: {
+    shiptime,
+    beltPopup,
+    beltBall,
     swiper,
-    swiperSlide
+    swiperSlide,
+    stackdetails
+
   },
   methods: {
-    svgtime(value){
-      let times
-      // 两点之间的距离
-      // let blength = Math.floor(Math.sqrt(Math.pow(value.bx,2)+Math.pow(value.by,2)));
-      // let elength = Math.floor(Math.sqrt(Math.pow(value.ex,2)+Math.pow(value.ey,2)));
-      // times= Math.ceil(Math.abs((elength-blength)/70))  
-       let dx = Math.abs(value.bx - value.ex);
-       let dy = Math.abs(value.by - value.ey);
-       times = Math.ceil(Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2))/70);
-      times<2?times=2:'';
-      return times;
+    stackNames(name,key){
+      let data;
+      data={
+       capacity:this.stackSize(name),
+       name:name,
+       x:key.x+1380,
+       y:key.y-30,
+      };
+        this.stackShow=true;
+        this.stackdetails=data;
     },
-    svgpath(value){
-   
-      // let path = M10*n+","+50 T170,70"
-      let path ="M"+value.bx+","+value.by+" "+ "T"+value.ex+","+value.ey;
-      return path
+    shipSize(name){
+       let size;
+      this.shipData.map(item => {
+        if (item[0] == name && !!item[1]) {
+          size = Math.round(item[3])+"吨";
+        }
+      });
+      return size;
+    },
+    stackSize(name) {
+      let size;
+      this.stackData.rows.map(item => {
+        if (item[0] == name) {
+          size = Math.round(item[1]) + "吨";
+        }
+      });
+      return size;
+    },
+    showDis() {
+      if(this.yardSize){
+        this.yardSize=false;
+      }
+        this.yardName = !this.yardName;
+      
+    },
+    showDisO() {
+      console.log("13123");
+
+      this.deviceName = !this.deviceName;
+    },
+    showDisT() {
+    if(this.yardName){
+      this.yardName=false;
+    }
+  this.yardSize=!this.yardSize;
+      
+    },
+    showDisS(){
+      this.shipNameSize=!this.shipNameSize;
+    },
+    stacksilo(name) {
+      let status = {};
+      this.stackData.rows.map(item => {
+        if (item[0] == name) {
+          status.temperature = item[2];
+        }
+      });
+      if (status.temperature > 40) {
+        return "gw slio";
+      }
+      return "slio";
+    },
+    shiptransfrom(name) {
+      if (name) {
+        return "transfrom";
+      }
+    },
+    stackframe(name) {
+      return "frame";
+    },
+    train(name) {
+      let classname;
+      for (const index in this.trainData) {
+        if (name.toUpperCase() == this.trainData[index][0]) {
+          classname = this.trainData[index][1];
+        }
+      }
+      if (!classname) {
+        return "null";
+      }
+      if (classname == 1) {
+        return "one";
+      }
+      if (classname == 2) {
+        return "two";
+      }
+      if (classname > 2) {
+        return "three";
+      }
+    },
+    dumpertransfrom(name) {
+      if (name) {
+        return "transfrom";
+      }
+    },
+    stackerrer(name) {
+      let status;
+      for (const key in this.beltData) {
+        if (this.beltData[key].device_belt_name_simplify == name) {
+          status = this.beltData[key].status;
+          if (name.substring(0, 2) == "CD" && name.length > 3) {
+            if (status == "gz") {
+              return "gzT";
+            }
+            if (status == "yx") {
+              return "yxT";
+            }
+            if (status == "kx") {
+              return "kxT";
+            }
+          }
+        }
+      }
+      if (status == "gz") {
+        return "gz";
+      }
+      if (status == "yx") {
+        return "yx";
+      }
+      if (status == "kx") {
+        return "kx";
+      }
+    },
+    timeClass(value) {
+      if (value.status == "yx") {
+        return "timeyx";
+      }
+      if (value.status == "kx") {
+        return "timekx";
+      }
+      if (value.status == "gz") {
+        return "timegz";
+      }
+      if (value.status == "tl") {
+        return "timetl";
+      }
+    },
+    elementBShow() {
+      this.timepopup.show = false;
+    },
+    showValue(value) {
+      this.timepopup.show = true;
+      this.timepopup.value = value;
     },
     timeBoxStyle(data) {
       let nowTime = new Date(data.ship.SL1[0].endtime / 1000);
@@ -294,19 +608,20 @@ export default {
       if (widthPx > 1300) {
         widthPx = 1200;
       }
-      if (value.status == "yx") {
-        color = "#57fef8";
-      }
-      if (value.status == "kx") {
-        color = "#2b68ff";
-      }
-      if (value.status == "gz") {
-        color = "red";
-      }
-      if (value.status == "tl") {
-        color = "#aeaeae";
-      }
-      style = { width: widthPx + "px", "background-color": color };
+      // if (value.status == "yx") {
+      //   color = "#57fef8";
+      // }
+      // if (value.status == "kx") {
+      //   color = "#2b68ff";
+      // }
+      // if (value.status == "gz") {
+      //   color = "red";
+      // }
+      // if (value.status == "tl") {
+      //   color = "#aeaeae";
+      // }
+      style = { width: widthPx + "px" };
+      // style = { width: widthPx + "px", "background-color": color };
       return style;
     },
     titleName(name) {
@@ -379,13 +694,18 @@ export default {
       history.dumper = dumper;
       history.ship = ship;
       this.historyData = history;
+      // 时间轴数据
     },
     //通过获得的swiper对象来暂停自动播放
     on_top_enter() {
-      this.$refs.mySwiper.swiper.autoplay.stop();
+      if (!!this.historyData) {
+        this.$refs.mySwiper.swiper.autoplay.stop();
+      }
     },
     on_top_leave() {
-      this.$refs.mySwiper.swiper.autoplay.start();
+      if (!!this.historyData) {
+        this.$refs.mySwiper.swiper.autoplay.start();
+      }
     },
     slioloaderPosition(name) {
       let x, y, style;
@@ -396,13 +716,13 @@ export default {
 
           for (let index in positionData.silo) {
             if (index == status) {
-              y = positionData.silo[index].y - 43;
-              x = positionData.silo[index].x + 35;
+              y = positionData.silo[index].y - 50;
+              x = positionData.silo[index].x - 35;
             }
           }
         }
       }
-      style = { left: x + "px", top: y + "px" };
+      style = { left: x + 18 + "px", top: y + 13 + "px" };
 
       return style;
     },
@@ -462,7 +782,7 @@ export default {
     // 装船机位置
     shiploaderPosition(name) {
       let x, y, style, berth;
-      let widths = 40;
+      let widths = 33;
       if (name == "SLK" || name == "SL7" || name == "SL12") {
         x = positionData.shiploader[name].x;
         y = positionData.shiploader[name].y;
@@ -495,7 +815,7 @@ export default {
           let num = this.berthPosition[berth] + berthPlural - 1;
           x = positionData.ship[berth].xx + widths * num;
           y = positionData.ship[berth].yy;
-          style = { left: x + "px", top: y - 5 + "px" };
+          style = { left: x + "px", top: y - 10 + "px" };
 
           //装船机个数
           let nums = 0;
@@ -521,6 +841,48 @@ export default {
       });
       return show;
     },
+    shipstatus(name) {
+      //A收集该泊位装船机的状态判断船的状态，首先判断finishtime是否完成，接着判断该泊位上是否有运行的装船机
+      //  根据开工时间判断
+
+      let state;
+      for (const key in this.shipData) {
+        if (name == this.shipData[key][0]) {
+          if (this.shipData[key][5]) {
+            // state=false;
+            return "wc";
+          }
+          if (this.shipData[key][6]) {
+            return "yx";
+          } else {
+            return "kx";
+          }
+        }
+      }
+      //  根据装船机判断
+      // let num=[];
+      //  for (const key in this.beltData) {
+      //    if (name == this.beltData[key].berth_pile_no) {
+      //     num.push(this.beltData[key].status)
+      //     }
+      //  }
+      //  if(num.indexOf('yx')==-1){
+      //    return 'kx'
+      //  }else{
+      //    return 'yx'
+      //  }
+    },
+    shipnames(name) {
+      if (name.substring(2, 3) == "0") {
+        return "left";
+      }
+      if (name.substring(0, 1) == "1" || name.substring(0, 1) == "3") {
+        return "top";
+      }
+      if (name.substring(0, 1) == "2" || name.substring(0, 1) == "4") {
+        return "down";
+      }
+    },
     shipShow(name) {
       let show;
       this.shipData.map(item => {
@@ -528,7 +890,7 @@ export default {
           show = 1;
         }
       });
-      return show == 1 ? true : false;
+      return show == 1 ? "show" : "";
     },
     // 堆取料机
     stackerClass(name) {
@@ -565,8 +927,11 @@ export default {
           }
           return "take";
         }
-        if (status == "kx" || status == "gz") {
+        if (status == "kx") {
           return "take";
+        }
+        if (status == "gz") {
+          return "take gz";
         }
       }
 
@@ -579,11 +944,14 @@ export default {
             return "stackUp";
           }
           if (upDown == -1) {
-            return "stackDown";
+            return "stackDown  name";
           }
         }
-        if (status == "kx" || status == "gz") {
+        if (status == "kx") {
           return "stack";
+        }
+        if (status == "gz") {
+          return "stack gz";
         }
       }
       if (name.substring(0, 1) == "R") {
@@ -598,45 +966,44 @@ export default {
             return "takeDown";
           }
         }
-        if (status == "kx" || status == "gz") {
+        if (status == "kx") {
           return "take";
+        }
+        if (status == "gz") {
+          return "take gz";
         }
       }
     },
     stackerPosition(name) {
-      // console.log(name,"name")
-      let x, y, style;
+      let x, y, style, indexs;
       for (let key in this.beltData) {
         if (this.beltData[key].device_belt_name_simplify == name) {
           let status = this.beltData[key].berth_pile_no;
           // 发生故障用默认值
-          if (status == "zw") {
-            x = positionData.stacker[name].x - 20;
-            y = positionData.stacker[name].y - 7;
+          if (status == "zw" || status == "wu") {
+            if (!positionData.stacker[name]) {
+              return false;
+            }
+            x = positionData.stacker[name].x + 80;
+            y = positionData.stacker[name].y - 20;
             style = { left: x + "px", top: y + "px" };
             return style;
           }
           for (let index in positionData.stack) {
             if (index == status) {
+              indexs = positionData.stack[index].zindex;
               let state = this.downUp(index, name);
               if (name == "R1" || name == "R2") {
                 y = positionData.stack[index].y - 30 + state * 25;
               } else {
                 y = positionData.stack[index].y - 35 + state * 22;
               }
-
-              // if (name == "R1" || name == "R2") {
-              //   y = positionData.stack[index].y - 63 ;
-              // } else {
-              //   y = positionData.stack[index].y -58;
-              // }
               x = positionData.stack[index].x + 30 * state;
             }
           }
         }
       }
-      style = { left: x + "px", top: y + "px" };
-
+      style = { left: x - 30 + "px", top: y - 2 + "px", zIndex: indexs };
       return style;
     },
     downUp(index, name) {
@@ -656,23 +1023,6 @@ export default {
       }
       return plusOr;
     },
-    // downUp(index, name) {
-    //   let plusOr = 0;
-    //   for (let key in positionData.dev_pile) {
-    //     if (name == key) {
-    //       let up = positionData.dev_pile[key].u;
-    //       let down = positionData.dev_pile[key].d;
-    //       if (index.substring(0, up.length) == up && up.length != 0) {
-    //         plusOr = 1;
-    //       }
-
-    //       if (index.substring(0, down.length) == down && down.length != 0) {
-    //         plusOr = -1;
-    //       }
-    //     }
-    //   }
-    //   return plusOr;
-    // },
     stackStatus(name) {
       let status = {};
       this.stackData.rows.map(item => {
@@ -686,37 +1036,66 @@ export default {
       // 堆场大小温度状态
       if (
         0 < status.capacity &&
-        status.capacity < 6000 &&
+        status.capacity < 5000 &&
         status.temperature < 50
       ) {
         return "small";
       }
       if (
-        6000 < status.capacity &&
-        status.capacity < 12000 &&
+        5000 < status.capacity &&
+        status.capacity < 10000 &&
+        status.temperature < 50
+      ) {
+        return "minddle";
+      }
+      if (
+        10000 < status.capacity &&
+        status.capacity < 15000 &&
         status.temperature < 50
       ) {
         return "big";
       }
-      if (status.capacity > 12000 && status.temperature < 50) {
+      if (
+        15000 < status.capacity &&
+        status.capacity < 20000 &&
+        status.temperature < 50
+      ) {
         return "max";
       }
+      if (status.capacity > 20000 && status.temperature < 50) {
+        return "maxbig";
+      }
+
       if (
         0 < status.capacity &&
-        status.capacity < 6000 &&
-        status.temperature > 50
+        status.capacity < 5000 &&
+        status.temperature >= 50
       ) {
         return "smallRed";
       }
       if (
-        6000 < status.capacity &&
-        status.capacity < 12000 &&
-        status.temperature > 50
+        5000 < status.capacity &&
+        status.capacity < 10000 &&
+        status.temperature >= 50
+      ) {
+        return "middleRed";
+      }
+      if (
+        10000 < status.capacity &&
+        status.capacity < 15000 &&
+        status.temperature >= 50
       ) {
         return "bigRed";
       }
-      if (status.capacity > 12000 && status.temperature > 50) {
+      if (
+        15000 < status.capacity &&
+        status.capacity < 20000 &&
+        status.temperature >= 50
+      ) {
         return "maxRed";
+      }
+      if (status.capacity > 20000 && status.temperature > 50) {
+        return "maxbigRed";
       }
       if (status.capacity == 0) {
         return "null";
@@ -734,19 +1113,157 @@ export default {
       return status;
     },
     init(datas) {
-      let svgname,svgdata=[];
+      let svgdata = [],
+        popup = [],
+        machine = [],
+        sW = 210,
+        sT = 10,
+        esW = 170,
+        esT = 30,
+        csW = 130,
+        csT = 40,
+        cesW = 100,
+        cesT = 0;
       datas.map(item => {
-          if((item.status=="yx")&&(item.device_belt_name_simplify.slice(0,1)=="B")){
-            svgname = item.device_belt_name_simplify; 
-            for (const key in positionData.belt) {
-              if(key == svgname){
-                svgdata.push(positionData.belt[key])
-              }
+        let dataname;
+        if (
+          item.status == "yx" &&
+          item.device_belt_name_simplify.slice(0, 1) == "B"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          for (const key in positionData.belt) {
+            if (key == dataname) {
+              svgdata.push(positionData.belt[key]);
             }
           }
-           
-          });
-           this.svgdatas= svgdata;
+        }
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 1) == "B"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          for (const key in positionData.belt) {
+            if (key == dataname) {
+              let obj = {
+                name: dataname,
+                x: positionData.belt[key].bx,
+                y: positionData.belt[key].by,
+                ex: positionData.belt[key].ex,
+                ey: positionData.belt[key].ey
+              };
+              popup.push(obj);
+            }
+          }
+        }
+        // 装船机设备
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 2) == "SL"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          for (const key in positionData.shiploader) {
+            if (key == dataname) {
+              let obj = {
+                name: dataname,
+                x: positionData.shiploader[key].x,
+                y: positionData.shiploader[key].y - 20
+              };
+              machine.push(obj);
+            }
+          }
+        }
+        // 翻车机
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 2) == "CD"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          for (const key in positionData.dumper) {
+            if (key == dataname) {
+              let obj = {
+                name: dataname,
+                x: positionData.dumper[key].x + csW,
+                y: positionData.dumper[key].y - csT,
+                ex: positionData.dumper[key].x + cesW,
+                ey: positionData.dumper[key].y - cesT
+              };
+              machine.push(obj);
+            }
+          }
+        }
+        // 堆取料机
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 1) == "R"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          let obj = {
+            name: dataname,
+            x:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              sW,
+            y:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) -
+              sT,
+            ex:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              esW,
+            ey:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) +
+              esT
+          };
+          machine.push(obj);
+        }
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 2) == "SR"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          let obj = {
+            name: dataname,
+            x:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              sW,
+            y:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) -
+              sT,
+            ex:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              esW,
+            ey:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) +
+              esT
+          };
+          machine.push(obj);
+        }
+        if (
+          item.status == "gz" &&
+          item.device_belt_name_simplify.slice(0, 1) == "S" &&
+          item.device_belt_name_simplify.slice(1, 2) != "L" &&
+          item.device_belt_name_simplify.slice(1, 2) != "F"
+        ) {
+          dataname = item.device_belt_name_simplify;
+          let obj = {
+            name: dataname,
+            x:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              sW,
+            y:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) -
+              sT,
+            ex:
+              Number(this.stackerPosition(dataname).left.replace(/px/g, "")) +
+              esW,
+            ey:
+              Number(this.stackerPosition(dataname).top.replace(/px/g, "")) +
+              esT
+          };
+          machine.push(obj);
+        }
+      });
+      this.machinePosition = machine;
+      this.popupData = popup;
+      this.svgdatas = svgdata;
       var SK01 = document.getElementById("skorke01");
       var SK01x = SK01.getContext("2d");
       SK01x.clearRect(0, 0, 3200, 1080);
@@ -763,13 +1280,13 @@ export default {
           }
         });
         if (status == "kx" && status2 == "kx") {
-          color = "#bfbfbf";
+          color = "#1a4443";
         }
         if (status == "yx" || status2 == "yx") {
-          color = "#47d442";
+          color = "#14938e";
         }
         if (status == "gz" || status2 == "gz") {
-          color = "tomato";
+          color = "a03d3d";
         }
         return color;
       };
@@ -778,7 +1295,7 @@ export default {
         context.moveTo(x1, y1);
         context.lineTo(x2, y2);
         context.lineWidth = 2;
-        context.strokeStyle = color || "white";
+        context.strokeStyle = color || "#1a4443";
         context.stroke();
       };
       var stats = function(name) {
@@ -806,10 +1323,11 @@ export default {
           if (name == item.device_belt_name_simplify) {
             st =
               item.status == "yx"
-                ? "#47d442"
+                ? "#14938e"
                 : item.status == "gz"
-                ? "tomato"
-                : "#bfbfbf";
+                ? "#a03d3d"
+                : "#1a4443";
+            // : "red";
           }
         });
         return st;
@@ -830,8 +1348,20 @@ export default {
         this.getBelt();
         this.getStack();
         this.getShip();
-        this.getHistory();
-      }, 1000 * 60);
+    this.getWeather();
+
+        // this.getHistory();
+      }, 1000 * 120);
+    },
+    getWeather() {
+      this.axios
+        .get("/getWeather")
+        .then(response => {
+          this.weatherData = response.data;
+        })
+        .catch(response => {
+          console.log(response);
+        });
     },
     getBelt() {
       this.axios
@@ -867,7 +1397,8 @@ export default {
       this.axios
         .get("/getTrain")
         .then(response => {
-          // console.log(response.data.rows);
+          console.log(response);
+          this.trainData = response.data.rows;
         })
         .catch(response => {
           console.log(response.data);
@@ -896,9 +1427,28 @@ export default {
         .catch(response => {
           console.log(response);
         });
+    },
+    getShiphistory() {
+      this.axios
+        .get("/getShiphistory")
+        .then(response => {
+          // this.handle(response.data);
+          console.log(response);
+        })
+
+        .catch(response => {
+          console.log(response);
+        });
     }
   },
   mounted() {
+    //设备弹窗
+     document.addEventListener('click', (e) => {
+    if(e.target.className!='blank'){
+      this.stackShow=false;
+    }
+    console.log()
+    })
     //皮带
     this.getBelt();
     //堆场
@@ -909,7 +1459,9 @@ export default {
     this.getTrain();
     //时间轴历史数据
     // this.getHistoryCd();
-    this.getHistory();
+    // this.getHistory();
+    // this.getShiphistory();
+    this.getWeather();
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
@@ -939,15 +1491,19 @@ export default {
 
     setTimeout(() => {
       this.refreshData();
-    }, 1000 * 1);
+    }, 1000 * 2);
   },
   beforeDestroy() {
+    if (this.timertime) {
+      clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    }
     if (this.timer) {
-      clearInterval(this.timer);
+      window.clearInterval(this.timer);
     }
   },
   watch: {
     beltData: function(data) {
+      console.log("_________shuaixnle");
       this.init(data);
     },
     historyData: function(data) {
@@ -955,304 +1511,9 @@ export default {
         //   var SKT = document.getElementById("skorkess");
         // console.log(SKT)
         //   console.log(data)
-        this.timeInit(data);
+        // this.timeInit(data);
       }
     }
   }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.hello {
-  width: 5760px;
-  height: 1080px;
-  overflow: hidden;
-}
-iframe {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.skorke {
-  position: absolute;
-  left: 1280px;
-  top: 0;
-  background: url("../assets/BG.png") top center no-repeat;
-  background-size: 3200px;
-  width: 3200px;
-  height: 1080px;
-}
-.can {
-  position: absolute;
-  top: 0;
-  left: 77px;
-  /* z-index: 1; */
-}
-.smile {
-  position: absolute;
-  top: 0;
-  left: 77px;
-}
-.stack {
-  position: absolute;
-  left: 100px;
-  top: 5px;
-}
-.stack .coalpile span {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  color: #fff;
-  /* opacity: 0.8; */
-}
-.stack .coalpile img {
-  position: absolute;
-  width: 50px;
-  height: 40px;
-  opacity: 0.8;
-}
-.stack .coalpile .bigRed {
-  background: url("../assets/bigRed.png") bottom center no-repeat;
-  background-size: 40px;
-}
-.stack .coalpile .smallRed {
-  background: url("../assets/smallRed.png") bottom center no-repeat;
-  background-size: 30px;
-}
-.stack .coalpile .maxRed {
-  background: url("../assets/maxRed.png") bottom center no-repeat;
-  background-size: 50px;
-}
-.stack .coalpile .big {
-  background: url("../assets/big.png") bottom center no-repeat;
-  background-size: 40px;
-}
-.stack .coalpile .small {
-  background: url("../assets/small.png") bottom center no-repeat;
-  background-size: 30px;
-}
-.stack .coalpile .max {
-  background: url("../assets/max.png") bottom center no-repeat;
-  background-size: 50px;
-}
-.stack .coalpile .null {
-  /* background-color: blueviolet; */
-}
-.stack .stacker span {
-  width: 150px;
-  height: 60px;
-  background: url("../assets/take.png") top center no-repeat;
-  background-size: 60px;
-  position: absolute;
-  display: inline-block;
-  z-index: 6;
-  color: #fff;
-  /* transform: rotateY(180deg) */
-}
-.stack .stacker .stack {
-  background-image: url("../assets/stack.png");
-  background-position: 100% 100%;
-}
-.stack .stacker .stackUp {
-  background-image: url("../assets/stackUp.gif");
-  background-position: 10% 100%;
-}
-.stack .stacker .stackDown {
-  background-image: url("../assets/stackDown.gif");
-  background-position: 1% 100%;
-}
-.stack .stacker .take {
-  height: 65px;
-  background-image: url("../assets/take.png");
-
-  background-position: 100% 100%;
-}
-.stack .stacker .takeUp {
-  background-image: url("../assets/takeUp.gif");
-  background-position: 10% 100%;
-}
-.stack .stacker .takeDown {
-  background-image: url("../assets/takeDown.gif");
-  background-position: 0% 100%;
-}
-.ship {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-.ship span {
-  width: 180px;
-  height: 200px;
-  color: #fff;
-  border: 0;
-  position: absolute;
-  display: none;
-  background: url("../assets/ship.png") top center no-repeat;
-  background-size: 180px;
-}
-
-.ship .transfrom {
-  background: url("../assets/shipTansfrom.png") top center no-repeat;
-  background-size: 120px;
-}
-.ship .show {
-  display: inline-block;
-}
-.shiploader {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.shiploader span {
-  position: absolute;
-  width: 60px;
-  height: 50px;
-  background-size: 60px;
-}
-.shiploader .gzdown {
-  background-image: url("../assets/shiploadergzdown.png");
-}
-.shiploader .kxdown {
-  background-image: url("../assets/shiploadergzdown.png");
-}
-.shiploader .yxdown {
-  background-image: url("../assets/shiploaderyxdown.gif");
-}
-
-.shiploader .left {
-  background-image: url("../assets/shiploaderleft.png");
-}
-.shiploader .yleft {
-  background-image: url("../assets/shiploaderyleft.gif");
-}
-.shiploader .gleft {
-  background-image: url("../assets/shiploaderleft.png");
-}
-.shiploader .up {
-  background-image: url("../assets/shiploaderup.png");
-}
-.shiploader .gup {
-  background-image: url("../assets/shiploadergup.png");
-}
-.shiploader .yup {
-  background-image: url("../assets/shiploaderyup.gif");
-}
-.stack .dumper span {
-  width: 120px;
-  height: 100px;
-  background: url("../assets/dumperTansfrom.png") top center no-repeat;
-  position: absolute;
-  background-size: 80px;
-}
-.stack .dumper .transfrom {
-  background: url("../assets/dumper.png") top center no-repeat;
-
-  background-size: 120px;
-}
-.slio span {
-  width: 60px;
-  height: 50px;
-  background: url("../assets/siloloader.png") top center no-repeat;
-  position: absolute;
-  background-size: 55px;
-}
-html {
-  background-color: #092039;
-  /* overflow-y: hidden; 
- overflow-x: hidden; */
-}
-body {
-  position: relative;
-  top: -3px;
-}
-.timeaxis .type {
-  width: 100%;
-  height: 26px;
-}
-.timeaxis .timeBox {
-  width: 1100px;
-  float: left;
-  overflow: hidden;
-  padding-top: 7px;
-}
-.timeaxis .transverse {
-  width: 6000px;
-  float: right;
-  overflow: hidden;
-}
-.timeaxis .title {
-  float: left;
-  color: #fff;
-  font-size: 12px;
-  line-height: 20px;
-  height: 20px;
-  width: 40px;
-}
-
-.timeaxis {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  width: 1200px;
-  height: 500px;
-  padding-right: 20px;
-  padding-left: 20px;
-  background-color: #111d3a;
-}
-.timeaxis .timebox {
-  height: 470px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-.timeaxis .timegauge {
-  position: absolute;
-  left: -1px;
-  top: 0;
-  z-index: 0;
-}
-.timeaxis .timegauge #skorkess {
-  opacity: 0.6;
-}
-.timeaxis .timegauge #skorkeTime {
-  position: absolute;
-  left: -6px;
-  top: -10px;
-}
-.timeaxis .timecenter {
-  width: 1200px;
-  position: absolute;
-  left: 20px;
-  top: 20px;
-}
-.timeaxis .swiper-container {
-  height: 500px;
-}
-.timeaxis .transverse span {
-  float: right;
-  width: 4px;
-  height: 6px;
-  display: inline-block;
-  background-color: antiquewhite;
-}
-.timeaxis .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-}
-</style>
