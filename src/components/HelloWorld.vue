@@ -10,12 +10,13 @@
     <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/3662f732ad8d416ab1cf5da31803248e?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjM2NjJmNzMyYWQ4ZDQxNmFiMWNmNWRhMzE4MDMyNDhlIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.03qQ3ZbNc-VQhJhcjinV5K-6cRi0e9gvKd-7J4xzEXA" frameborder="0" style="position:absolute;left: 4000px;top:-60px"  width="800px" height="800px" scrolling="auto"></iframe> -->
     <!-- <img src="../assets/shipleft.png" style="position:absolute;left: 1380px;top:490px;width:200px" alt=""> -->
   
-    <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/dfce577e4fa44a039f4219975cb949e7?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6ImRmY2U1NzdlNGZhNDRhMDM5ZjQyMTk5NzVjYjk0OWU3IiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.XuZ_H2gSC2Z8hyAuK5ANmNHQU8wlUqPSOTcQIeAhG3Y" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe>
+    <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/dfce577e4fa44a039f4219975cb949e7?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6ImRmY2U1NzdlNGZhNDRhMDM5ZjQyMTk5NzVjYjk0OWU3IiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.XuZ_H2gSC2Z8hyAuK5ANmNHQU8wlUqPSOTcQIeAhG3Y" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe>
     <iframe style="position:absolute;left:0px; top:35px" width="1280px" height="1110px" src="http://10.60.127.130/hhgbi/v5/design/report/share/6d6cb0683bbf44e8bd406119943f2943?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjZkNmNiMDY4M2JiZjQ0ZThiZDQwNjExOTk0M2YyOTQzIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.3a7-SHQz9ismpR2Ixt6xsjzygOO5_gIkDwdO9lr7fgU" frameborder="0"></iframe>
-    <iframe style="position:absolute;left: 1450px;top:900px" src="http://10.60.127.130/hhgbi/view/report?viewlet=wjytest/%E6%BD%AE%E4%BD%8D%E8%AE%A1.frm" frameborder="0"></iframe>  -->
+    <iframe style="position:absolute;left: 1450px;top:900px" src="http://10.60.127.130/hhgbi/view/report?viewlet=wjytest/%E6%BD%AE%E4%BD%8D%E8%AE%A1.frm" frameborder="0"></iframe> 
   <stackdetails v-show='this.stackShow' :stackdata="this.stackdetails"></stackdetails>
     <div class="weather" v-if="weatherData">
       <span class="namebg"></span>
+      <span class="titleBig"></span>
       <em></em>
       <p>
         <span class="cc">{{ weatherData.rows[0][0].toFixed(1) }}℃</span>
@@ -120,6 +121,7 @@
         <button v-on:click="showDisT()">展示堆场量</button>
         <button v-on:click="showDisO()">展示设备号</button>
         <button v-on:click="showDisS()">展示装船量</button>
+        <button class="switch" v-on:click="switchTab()"></button>
       </div>
       <div class="stack" v-if="stackData">
         <div class="stackname">
@@ -215,7 +217,9 @@
             :key="index"
             :class="[stackerrer(index), dumpertransfrom(key.transfrom)]"
             alt=""
-            ><p v-show="deviceName">{{ index }}</p>
+            ><p 
+            class="dumperName"
+            v-show="deviceName">{{ index }}</p>
             <img src="../assets/stackgz.png" alt="" />
           </span>
         </div>
@@ -415,6 +419,9 @@ export default {
 
   },
   methods: {
+    switchTab(){
+    this.$router.push('/production')
+    },
     stackNames(name,key){
       let data;
       data={
@@ -1397,7 +1404,6 @@ export default {
       this.axios
         .get("/getTrain")
         .then(response => {
-          console.log(response);
           this.trainData = response.data.rows;
         })
         .catch(response => {
@@ -1465,29 +1471,29 @@ export default {
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-    jq.ajax({
-      //移动端登录需要带__device__=iPhone&terminal=H5
-      url: "http://10.60.127.130/hhgbi/login/cross/domain",
-      data: {
-        fine_username: "bigscreen",
-        fine_password: "bigscreen_2019",
-        validity: -1
-      },
-      timeout: 5000,
-      dataType: "jsonp",
-      jsonp: "callback",
-      success: function(res) {
-        // alert('登录成功');
-        var token = res.accessToken;
-        // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-        // 原则上登录成功后不用再带token参数，当前有bug正在修复
-        // document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-        // document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
-      },
-      error: function() {
-        alert("登录失败");
-      }
-    });
+    // jq.ajax({
+    //   //移动端登录需要带__device__=iPhone&terminal=H5
+    //   url: "http://10.60.127.130/hhgbi/login/cross/domain",
+    //   data: {
+    //     fine_username: "bigscreen",
+    //     fine_password: "bigscreen_2019",
+    //     validity: -1
+    //   },
+    //   timeout: 5000,
+    //   dataType: "jsonp",
+    //   jsonp: "callback",
+    //   success: function(res) {
+    //     // alert('登录成功');
+    //     var token = res.accessToken;
+    //     // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+    //     // 原则上登录成功后不用再带token参数，当前有bug正在修复
+    //     // document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+    //     // document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+    //   },
+    //   error: function() {
+    //     alert("登录失败");
+    //   }
+    // });
 
     setTimeout(() => {
       this.refreshData();
@@ -1503,7 +1509,6 @@ export default {
   },
   watch: {
     beltData: function(data) {
-      console.log("_________shuaixnle");
       this.init(data);
     },
     historyData: function(data) {

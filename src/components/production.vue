@@ -3,12 +3,13 @@
 </style>
 <template>
   <div class="hello">
-   <!-- <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/8fe9dc40a3cd4df5a685597dfeffef63?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjhmZTlkYzQwYTNjZDRkZjVhNjg1NTk3ZGZlZmZlZjYzIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.NR_pdt1DOvkoJex0ZyNo0iINRfL0qlK4cgWz_ZPk_tc" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe>
-    <iframe style="position:absolute;left:0px; top:35px" width="1280px" height="1000px" src="http://10.60.127.130/hhgbi/v5/design/report/share/b5d9738d395241aea4554a3643bb1789?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6ImI1ZDk3MzhkMzk1MjQxYWVhNDU1NGEzNjQzYmIxNzg5IiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.6TAaAwBwFIWzUlezb5nclYAStGFlmRPHNkm0OJJ7XNo" frameborder="0"></iframe>
-    <iframe style="position:absolute;left: 1450px;top:900px" src="http://10.60.127.130/hhgbi/view/report?viewlet=wjytest/%E6%BD%AE%E4%BD%8D%E8%AE%A1.frm" frameborder="0"></iframe> -->
+   <iframe src="http://10.60.127.130/hhgbi/v5/design/report/share/8fe9dc40a3cd4df5a685597dfeffef63?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6IjhmZTlkYzQwYTNjZDRkZjVhNjg1NTk3ZGZlZmZlZjYzIiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.NR_pdt1DOvkoJex0ZyNo0iINRfL0qlK4cgWz_ZPk_tc" frameborder="0" width="1280px" height="1110px"  scrolling="auto" style="position:absolute;left: 4480px;top:35px"></iframe>
+    <iframe style="position:absolute;left:0px; top:35px" width="1280px" height="1030px" src="http://10.60.127.130/hhgbi/v5/design/report/share/b5d9738d395241aea4554a3643bb1789?link=eyJhbGciOiJIUzI1NiJ9.eyJyZXBvcnRJZCI6ImI1ZDk3MzhkMzk1MjQxYWVhNDU1NGEzNjQzYmIxNzg5IiwidXNlcklkIjoiYjVmMGMyZWUtNjQwZi00MDM5LWE0ZDQtOTE4YjU1MzU0ODk4IiwianRpIjoiand0In0.6TAaAwBwFIWzUlezb5nclYAStGFlmRPHNkm0OJJ7XNo" frameborder="0"></iframe>
+    <iframe style="position:absolute;left: 1450px;top:900px" src="http://10.60.127.130/hhgbi/view/report?viewlet=wjytest/%E6%BD%AE%E4%BD%8D%E8%AE%A1.frm" frameborder="0"></iframe>
   <stackdetails v-show='this.stackShow' :stackdata="this.stackdetails"></stackdetails>
     <div class="weather" v-if="weatherData">
       <span class="namebg"></span>
+      <span class="titleBig"></span>
       <em></em>
       <p>
         <span class="cc">{{ weatherData.rows[0][0].toFixed(1) }}℃</span>
@@ -38,7 +39,7 @@
       </div>
       <div 
       class="elementBox" 
-      :style="{top:this.timepopup.value.y + 'px',left:this.timepopup.value.x-4470 + 'px'}"
+      :style="{top:this.timepopup.value.y -20+ 'px',left:this.timepopup.value.x-4470 + 'px'}"
       v-if="this.timepopup.show" 
       >
         <p>
@@ -113,6 +114,7 @@
         <button v-on:click="showDisT()">展示堆场量</button>
         <button v-on:click="showDisO()">展示设备号</button>
         <button v-on:click="showDisS()">展示装船量</button>
+        <button class="switch" v-on:click="switchTab()"></button>
       </div>
       <div class="stack" v-if="stackData">
         <div class="stackname">
@@ -207,7 +209,9 @@
             :key="index"
             :class="[stackerrer(index), dumpertransfrom(key.transfrom)]"
             alt=""
-            ><p v-show="deviceName">{{ index }}</p>
+            ><p
+            class="dumperName"
+             v-show="deviceName">{{ index }}</p>
             <img src="../assets/stackgz.png" alt="" />
           </span>
         </div>
@@ -371,7 +375,7 @@ export default {
             value.y = e.pageY - 500;
             console.log(value.x);
             value.y > 377 ? (value.y = 377) : "";
-            value.x > 5510 ? (value.y = 5510) : "";
+            value.x > 5510 ? (value.x = 5510) : "";
             that.showValue(value);
             // console.log(e)
             let elemen = e.view;
@@ -408,6 +412,9 @@ export default {
     stackdetails
   },
   methods: {
+     switchTab(){
+    this.$router.push('/visit')
+    },
       stackNames(name,key){
 let data;
       data={
@@ -1455,29 +1462,29 @@ let data;
     // this.init();
     // this.axios.get()
     /*-------------------AJAX方式-------------------*/
-    jq.ajax({
-      //移动端登录需要带__device__=iPhone&terminal=H5
-      url: "http://10.60.127.130/hhgbi/login/cross/domain",
-      data: {
-        fine_username: "bigscreen",
-        fine_password: "bigscreen_2019",
-        validity: -1
-      },
-      timeout: 5000,
-      dataType: "jsonp",
-      jsonp: "callback",
-      success: function(res) {
-        // alert('登录成功');
-        var token = res.accessToken;
-        // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
-        // 原则上登录成功后不用再带token参数，当前有bug正在修复
-        // document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
-        // document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
-      },
-      error: function() {
-        alert("登录失败");
-      }
-    });
+    // jq.ajax({
+    //   //移动端登录需要带__device__=iPhone&terminal=H5
+    //   url: "http://10.60.127.130/hhgbi/login/cross/domain",
+    //   data: {
+    //     fine_username: "bigscreen",
+    //     fine_password: "bigscreen_2019",
+    //     validity: -1
+    //   },
+    //   timeout: 5000,
+    //   dataType: "jsonp",
+    //   jsonp: "callback",
+    //   success: function(res) {
+    //     // alert('登录成功');
+    //     var token = res.accessToken;
+    //     // window.location.href = "http://mobile.finebi.com:37700/webroot/decision/url/mobile"
+    //     // 原则上登录成功后不用再带token参数，当前有bug正在修复
+    //     // document.getElementById("myframe1").src= "http://10.60.127.130/hhgbi/v5/design/report/6d6cb0683bbf44e8bd406119943f2943/view?token=" + token;
+    //     // document.getElementById("myframe2").src= "http://10.60.127.130/hhgbi/v5/design/report/2e78077d3e424219a89cccdab450109c/view?token=" + token;
+    //   },
+    //   error: function() {
+    //     alert("登录失败");
+    //   }
+    // });
 
     setTimeout(() => {
       this.refreshData();
@@ -1493,7 +1500,6 @@ let data;
   },
   watch: {
     beltData: function(data) {
-      console.log("_________shuaixnle");
       this.init(data);
     },
     historyData: function(data) {
